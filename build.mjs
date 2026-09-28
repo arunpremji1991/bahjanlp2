@@ -4,7 +4,8 @@
 //   node build.mjs renovation   → builds one campaign
 // Output: dist/<slug>/index.html + dist/assets/ (shared)
 // The campaign marked DEFAULT is also written to dist/index.html.
-import { readdir, mkdir, writeFile, copyFile, cp, rm } from 'node:fs/promises';
+import { readdir, mkdir, writeFile, copyFile, cp, rm, readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { render } from './src/template.mjs';
@@ -40,6 +41,10 @@ await cp('assets/img', 'dist/assets/img', { recursive: true });
 await copyFile('src/styles.css', 'dist/assets/styles.css');
 await copyFile('src/app.js', 'dist/assets/app.js');
 
+// Cache-busting: append a content hash to CSS/JS URLs (they are cached for 7 days).
+const ver = createHash('sha1').update(await readFile('src/styles.css')).update(await readFile('src/app.js')).digest('hex').slice(0, 8);
+const bust = (html) => html.replace(/(assets\/(?:styles\.css|app\.js))"/g, `$1?v=${ver}"`);
+
 // Credits map keys are "assets/…"; published paths are relative to each page.
 for (const slug of slugs) {
   const { default: c } = await import(pathToFileURL(`campaigns/${slug}.mjs`).href);
@@ -53,7 +58,7 @@ for (const slug of slugs) {
     if (!existsSync(img)) console.warn(`  ! ${slug}: missing image ${img}`);
 
   await mkdir(`dist/${slug}`, { recursive: true });
-  await writeFile(`dist/${slug}/index.html`, render(c, tracking, credits, '../'));
-  if (slug === DEFAULT) await writeFile('dist/index.html', render(c, tracking, credits, ''));
+  await writeFile(`dist/${slug}/index.html`, bust(render(c, tracking, credits, '../')));
+  if (slug === DEFAULT) await writeFile('dist/index.html', bust(render(c, tracking, credits, '')));
   console.log(`✓ dist/${slug}/index.html${slug === DEFAULT ? '  (+ dist/index.html)' : ''}`);
 }
