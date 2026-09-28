@@ -1,0 +1,12 @@
+{
+  "name": "bahjah-campaign-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable paid-campaign landing page for جمعية بهجة العمانية للأيتام",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "preview": "node serve.mjs 5173"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,294 @@
+/* Bahjah campaign landing page: behaviour & measurement.
+ * No dependencies. Reads window.BAHJAH_LP (injected at build time).
+ *
+ * Events (all pushed to window.dataLayer, and mirrored to Meta / GA4 / Google Ads
+ * when their IDs are configured and consent is granted):
+ *   view_content    → Meta ViewContent   | GA4 view_item
+ *   cta_click       → Meta CTAClick (custom) | GA4 cta_click
+ *   payment_click   → Meta InitiateCheckout | GA4 begin_checkout | Ads conversion (optional)
+ *   contact_click / copy_bank_account / select_amount / outbound_click
+ * Final conversion (Purchase/Donate) happens on bahjah.org.om; see
+ * tracking/thank-you-snippet.html.
+ */
+(function () {
+  'use strict';
+  var LP = window.BAHJAH_LP || {};
+  var T = LP.tracking || {};
+  var C = LP.content || {};
+  var CURRENCY = LP.currency || 'OMR';
+  window.dataLayer = window.dataLayer || [];
+
+  /* ── Safe storage ───────────────────────────────────────────────────── */
+  var store = {
+    get: function (k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  };
+
+  /* ── 1. UTM / click-ID persistence ──────────────────────────────────── */
+  var ATTR_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
+    'gclid', 'gbraid', 'wbraid', 'fbclid', 'ttclid', 'msclkid'];
+  var ATTR_STORE = 'bahjah_lp_attribution';
+  var TTL = (T.attributionDays || 30) * 864e5;
+
+  var attribution = (function () {
+    var qs = new URLSearchParams(location.search);
+    var now = Date.now();
+    var fresh = {};
+    ATTR_KEYS.forEach(function (k) { var v = qs.get(k); if (v) fresh[k] = v.slice(0, 200); });
+    var saved = store.get(ATTR_STORE);
+    if (saved && now - saved.ts > TTL) saved = null;
+    var has = Object.keys(fresh).length > 0;
+    var rec = {
+      first: (saved && saved.first) || (has ? fresh : {}),
+      last: has ? fresh : (saved && saved.last) || {},
+      landing: (saved && saved.landing) || location.pathname,
+      ts: has || !saved ? now : saved.ts,
+    };
+    store.set(ATTR_STORE, rec);
+    return rec;
+  })();
+
+  // Append last-touch params to every outbound donation link.
+  function decorate(url) {
+    try {
+      var u = new URL(url, location.href);
+      Object.keys(attribution.last).forEach(function (k) {
+        if (!u.searchParams.has(k)) u.searchParams.set(k, attribution.last[k]);
+      });
+      return u.toString();
+    } catch (e) { return url; }
+  }
+  document.querySelectorAll('a[data-payment]').forEach(function (a) { a.href = decorate(a.getAttribute('href')); });
+
+  /* ── 2. Consent + tracker loading ───────────────────────────────────── */
+  var CONSENT_KEY = 'bahjah_lp_consent';
+  var loaded = false;
+
+  function gtag() { window.dataLayer.push(arguments); }
+  window.gtag = window.gtag || gtag;
+
+  // Google Consent Mode v2 defaults (denied until the visitor accepts).
+  if (T.requireConsent) {
+    gtag('consent', 'default', {
+      ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+      analytics_storage: 'denied', wait_for_update: 500,
+    });
+  }
+
+  function loadScript(src) {
+    var s = document.createElement('script'); s.async = true; s.src = src; document.head.appendChild(s);
+  }
+
+  function loadTrackers() {
+    if (loaded) return; loaded = true;
+    if (T.requireConsent) {
+      gtag('consent', 'update', {
+        ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted',
+      });
+    }
+    // Google Tag Manager (recommended: configure Meta/GA4/Ads tags inside GTM
+    // from the dataLayer events below, and leave the direct IDs empty).
+    if (T.gtmId) {
+      window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+      loadScript('https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(T.gtmId));
+    }
+    // Direct gtag (GA4 and/or Google Ads)
+    var gid = T.ga4Id || T.googleAdsId;
+    if (gid) {
+      loadScript('https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gid));
+      gtag('js', new Date());
+      if (T.ga4Id) gtag('config', T.ga4Id, T.crossDomains && T.crossDomains.length ? { linker: { domains: T.crossDomains } } : {});
+      if (T.googleAdsId) gtag('config', T.googleAdsId);
+    }
+    // Meta Pixel
+    if (T.metaPixelId && !window.fbq) {
+      /* eslint-disable */
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      /* eslint-enable */
+      window.fbq('init', T.metaPixelId);
+      window.fbq('track', 'PageView');
+    }
+    // Flush events that happened before consent.
+    queue.splice(0).forEach(function (e) { sendToVendors(e.name, e.params); });
+  }
+
+  /* ── 3. Event API ───────────────────────────────────────────────────── */
+  var queue = [];
+  var base = function () {
+    return {
+      campaign_slug: LP.slug,
+      content_id: C.contentId,
+      content_name: C.contentName,
+      content_category: C.contentCategory,
+      utm_source: attribution.last.utm_source || '',
+      utm_medium: attribution.last.utm_medium || '',
+      utm_campaign: attribution.last.utm_campaign || '',
+      utm_content: attribution.last.utm_content || '',
+    };
+  };
+
+  function sendToVendors(name, p) {
+    var fb = window.fbq, item = { item_id: C.contentId, item_name: C.contentName, item_category: C.contentCategory };
+    var meta = { content_name: C.contentName, content_category: C.contentCategory, content_ids: [C.contentId], content_type: 'product' };
+    if (p.value) { meta.value = p.value; meta.currency = CURRENCY; }
+    var direct = !!(T.ga4Id || T.googleAdsId);
+    switch (name) {
+      case 'view_content':
+        fb && fb('track', 'ViewContent', meta);
+        direct && gtag('event', 'view_item', { currency: CURRENCY, items: [item] });
+        break;
+      case 'payment_click':
+        fb && fb('track', 'InitiateCheckout', meta);
+        if (direct) {
+          gtag('event', 'begin_checkout', { currency: CURRENCY, value: p.value || undefined, items: [item], cta_location: p.cta_location });
+          if (T.googleAdsId && T.googleAdsPaymentClickLabel) {
+            gtag('event', 'conversion', { send_to: T.googleAdsId + '/' + T.googleAdsPaymentClickLabel, transport_type: 'beacon' });
+          }
+        }
+        break;
+      case 'cta_click':
+        fb && fb('trackCustom', 'CTAClick', { cta_location: p.cta_location, content_name: C.contentName });
+        direct && gtag('event', 'cta_click', { cta_location: p.cta_location });
+        break;
+      case 'contact_click':
+      case 'copy_bank_account':
+        fb && fb('track', 'Contact', { content_name: C.contentName, method: p.method });
+        direct && gtag('event', name, { method: p.method });
+        break;
+      default:
+        direct && gtag('event', name, p);
+    }
+  }
+
+  function track(name, params) {
+    var p = Object.assign(base(), params || {});
+    window.dataLayer.push(Object.assign({ event: name }, p));
+    if (loaded) sendToVendors(name, p); else queue.push({ name: name, params: p });
+    if (T.debug) console.info('[bahjah-lp]', name, p);
+  }
+  window.bahjahTrack = track;
+
+  /* ── 4. Consent banner ──────────────────────────────────────────────── */
+  (function () {
+    if (!T.requireConsent) { loadTrackers(); return; }
+    var choice = store.get(CONSENT_KEY);
+    if (choice === 'granted') { loadTrackers(); return; }
+    if (choice === 'denied') return;
+    var el = document.querySelector('[data-consent]');
+    if (!el) return;
+    var close = function () { el.hidden = true; document.body.classList.remove('consent-open'); };
+    el.hidden = false; document.body.classList.add('consent-open');
+    el.querySelector('[data-consent-accept]').addEventListener('click', function () {
+      store.set(CONSENT_KEY, 'granted'); close(); loadTrackers();
+    });
+    el.querySelector('[data-consent-decline]').addEventListener('click', function () {
+      store.set(CONSENT_KEY, 'denied'); close();
+    });
+  })();
+
+  /* ── 5. Page events ─────────────────────────────────────────────────── */
+  track('view_content');
+
+  var selectedAmount = null;
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest('a, button');
+    if (!a) return;
+    if (a.hasAttribute('data-cta')) {
+      var loc = a.getAttribute('data-cta');
+      track('cta_click', { cta_location: loc });
+      if (a.hasAttribute('data-payment')) {
+        track('payment_click', { cta_location: loc, value: selectedAmount || undefined, destination: LP.paymentUrl });
+      }
+    } else if (a.hasAttribute('data-contact')) {
+      track('contact_click', { method: a.getAttribute('data-contact') });
+    } else if (a.hasAttribute('data-outbound')) {
+      track('outbound_click', { target: a.getAttribute('data-outbound') });
+    }
+  });
+
+  /* ── 6. Official amount chips (only rendered when the config has them) ─ */
+  var amounts = document.querySelector('[data-amounts]');
+  if (amounts) {
+    var sync = function () {
+      var r = amounts.querySelector('input:checked');
+      selectedAmount = r ? Number(r.value) : null;
+    };
+    amounts.addEventListener('change', function () {
+      sync();
+      track('select_amount', { value: selectedAmount, currency: CURRENCY });
+    });
+    sync();
+  }
+
+  /* ── 6b. Amount → quantity helper (unit-priced WooCommerce products) ─ */
+  var calc = document.querySelector('[data-calc-input]');
+  var calcOut = document.querySelector('[data-calc-out]');
+  var payLinks = document.querySelectorAll('a[data-payment]');
+  function setPaymentQuantity(qty) {
+    if (!LP.addToCart) return; // pre-fill only when enabled in the campaign config
+    payLinks.forEach(function (a) {
+      try {
+        var u = new URL(a.href);
+        if (qty > 0) { u.searchParams.set('add-to-cart', LP.addToCart); u.searchParams.set('quantity', qty); }
+        else { u.searchParams.delete('add-to-cart'); u.searchParams.delete('quantity'); }
+        a.href = u.toString();
+      } catch (e) {}
+    });
+  }
+  if (calc && calcOut) {
+    var calcTimer;
+    calc.addEventListener('input', function () {
+      var v = Math.floor(Number(calc.value));
+      if (v > 0) {
+        selectedAmount = v;
+        calcOut.innerHTML = 'اكتب <strong>' + (v / (LP.unit || 1)) + '</strong> في خانة «الكمية» بصفحة الدفع = تبرع بـ <strong>' + v + ' ر.ع.</strong>';
+        setPaymentQuantity(v / (LP.unit || 1));
+        clearTimeout(calcTimer);
+        calcTimer = setTimeout(function () { track('select_amount', { value: v, currency: CURRENCY, method: 'custom' }); }, 800);
+      } else {
+        selectedAmount = null;
+        calcOut.textContent = 'اكتب المبلغ لتعرف ماذا تُدخل في خانة الكمية.';
+        setPaymentQuantity(0);
+      }
+    });
+  }
+  if (amounts) {
+    var syncQty = function () { var r = amounts.querySelector('input:checked'); if (r && r.dataset.qty) setPaymentQuantity(Number(r.dataset.qty)); };
+    amounts.addEventListener('change', syncQty); syncQty();
+  }
+
+  /* ── 7. Copy bank account ───────────────────────────────────────────── */
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var txt = btn.getAttribute('data-copy');
+      var label = btn.querySelector('span');
+      var done = function () {
+        btn.classList.add('is-done'); if (label) label.textContent = 'تم النسخ';
+        setTimeout(function () { btn.classList.remove('is-done'); if (label) label.textContent = 'نسخ'; }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
+      else { var t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e) {} t.remove(); done(); }
+      track('copy_bank_account', { method: 'bank_transfer', bank: btn.getAttribute('data-copy-label') });
+    });
+  });
+
+  /* ── 8. Sticky mobile CTA: visible when no other CTA is on screen ───── */
+  var sticky = document.querySelector('[data-sticky]');
+  var blocks = document.querySelectorAll('.cta-block');
+  if (sticky && 'IntersectionObserver' in window && blocks.length) {
+    var visible = new Set();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
+      var past = window.scrollY > 200;
+      var show = past && visible.size === 0;
+      sticky.classList.toggle('is-visible', show);
+      sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
+      var link = sticky.querySelector('a'); if (link) link.tabIndex = show ? 0 : -1;
+    });
+    blocks.forEach(function (b) { io.observe(b); });
+    window.addEventListener('scroll', function () {
+      if (window.scrollY <= 200) { sticky.classList.remove('is-visible'); sticky.setAttribute('aria-hidden', 'true'); }
+      else if (visible.size === 0) { sticky.classList.add('is-visible'); sticky.setAttribute('aria-hidden', 'false'); }
+    }, { passive: true });
+  }
+})();
