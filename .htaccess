@@ -4,10 +4,8 @@ DirectoryIndex index.html
 
 RewriteEngine On
 
-# Block source, config and docs; only dist/ is public.
-RewriteRule ^(campaigns|src|tracking|assets|\.claude|\.git)(/|$) - [F,L]
-RewriteRule ^(README\.md|package\.json|build\.mjs|serve\.mjs|\.gitignore)$ - [F,L]
-
+# Every path is mapped into dist/, so source files (campaigns/, src/, README…) are
+# never reachable from the web.
 # /renovation/ → dist/renovation/, /assets/… → dist/assets/…, / → dist/index.html
 RewriteCond %{REQUEST_URI} !^/dist/
 RewriteRule ^(.*)$ dist/$1 [L]
