@@ -1,0 +1,23 @@
+# Hostinger deploys the whole repo; serve the built site from dist/ at the web root.
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# Block source, config and docs; only dist/ is public.
+RewriteRule ^(campaigns|src|tracking|assets|\.claude|\.git)(/|$) - [F,L]
+RewriteRule ^(README\.md|package\.json|build\.mjs|serve\.mjs|\.gitignore)$ - [F,L]
+
+# /renovation/ → dist/renovation/, /assets/… → dist/assets/…, / → dist/index.html
+RewriteCond %{REQUEST_URI} !^/dist/
+RewriteRule ^(.*)$ dist/$1 [L]
+
+# Cache static assets; keep HTML fresh so campaign edits show immediately.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|jpg|png|svg|css|js)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
