@@ -10,6 +10,13 @@ export const credits = {
   ...Object.fromEntries(
     [1, 2, 3, 4, 5, 6].map((n) => [`assets/img/before-after-${n}-427.webp`, `${CV}#page=17 (قسم الصيانة والترميم)`])
   ),
+  ...Object.fromEntries(
+    [1, 2, 3, 4, 5, 6].flatMap((n) =>
+      ['before', 'after'].flatMap((k) =>
+        [320, 640].map((w) => [`assets/img/compare/${n}-${k}-${w}.webp`, `${CV}#page=17 (قسم الصيانة والترميم – ${k === 'before' ? 'قبل' : 'بعد'})`])
+      )
+    )
+  ),
   'assets/img/houses-maintenance-300.webp': `${U}/2026/02/c34.jpg`,
   'assets/img/residential-complex-218.webp': `${U}/2026/02/Screenshot-2026-02-08-at-12.37.55-AM.png`,
   'assets/img/charity-buildings-240.webp': `${U}/2026/02/v45we.jpg`,

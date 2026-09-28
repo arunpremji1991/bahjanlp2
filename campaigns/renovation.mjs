@@ -47,6 +47,8 @@ export default {
   cta: {
     primary: 'ساهم الآن في ترميم منازل الأيتام',
     short: 'ساهم في الترميم',
+    hero: 'ساهم الآن',
+    secondary: 'اكتشف أثر مساهمتك',   // scrolls to the before/after impact gallery
   },
 
   // ── 1. HERO ──────────────────────────────────────────────────────────────
@@ -56,6 +58,14 @@ export default {
     // Official wording, Bahjah profile (CV) – "Houses maintenance" project.
     need: 'تحرص جمعية بهجة العمانية للأيتام على توفير مسكن آمن وسليم، لذا تقوم بصيانة وترميم منازل الأيتام المتضررة.',
     needSource: 'الملف التعريفي للجمعية',
+    // Supporting line under the headline (campaign copy, consistent with the CV text above).
+    supporting: 'تساهم جمعية بهجة العمانية للأيتام في صيانة وترميم منازل الأسر المستفيدة، لتوفير بيئة سكنية أكثر أماناً واستقراراً.',
+    // Short trust chips under the hero (all from official sources).
+    trust: [
+      'جمعية خيرية غير حكومية منذ 2014',
+      'التبرع عبر الموقع الرسمي للجمعية',
+      'الدفع عبر بوابة بنك مسقط SmartPay',
+    ],
     image: {
       src: 'assets/img/before-after-5-427.webp',
       width: 427,
@@ -77,6 +87,46 @@ export default {
     },
   },
 
+  // ── BEFORE / AFTER (hero slider + impact gallery) ─────────────────────────
+  // REAL photos from the official profile PDF, p.17 (§16 Maintenance & Restoration).
+  // Each official side-by-side image was split into its "قبل" and "بعد" halves.
+  // Captions describe only what is visible in the photo.
+  compare: {
+    title: 'أثر حقيقي من أعمال الجمعية',
+    intro: 'صور قبل وبعد من أعمال الصيانة والترميم التي نفّذتها الجمعية، كما وردت في ملفها التعريفي الرسمي. اسحب المؤشر للمقارنة.',
+    source: 'الصور من الملف التعريفي الرسمي لجمعية بهجة (قسم الصيانة والترميم).',
+    sourceUrl: 'https://bahjah.org.om/wp/wp-content/uploads/2025/08/CV-Print-Proof.pdf',
+    heroIndex: 3, // which pair opens in the hero slider (walls & floors)
+    pairs: [
+      { id: 1, caption: 'ترميم سقف غرفة متضرر' },
+      { id: 5, caption: 'معالجة سقف متهالك' },
+      { id: 3, caption: 'إصلاح السقف والسطح' },
+      { id: 4, caption: 'ترميم الجدران والأرضيات' },
+      { id: 6, caption: 'تجديد دورة مياه' },
+      { id: 2, caption: 'تجديد الواجهة الخارجية للمنزل' },
+    ].map((p) => ({
+      ...p,
+      before: `assets/img/compare/${p.id}-before-640.webp`,
+      after: `assets/img/compare/${p.id}-after-640.webp`,
+      beforeSm: `assets/img/compare/${p.id}-before-320.webp`,
+      afterSm: `assets/img/compare/${p.id}-after-320.webp`,
+      width: 640,
+      height: 480,
+    })),
+  },
+
+  // ── HOW YOUR DONATION REACHES THE HOME (CV §16 methodology) ──────────────
+  process: {
+    title: 'كيف تصل مساهمتك إلى المنزل؟',
+    steps: [
+      { title: 'تتبرع عبر الموقع الرسمي', text: 'من صفحة «بناء وترميم» في موقع الجمعية، والدفع عبر بوابة بنك مسقط SmartPay.' },
+      { title: 'زيارة المنازل وتسجيل الحالات', text: 'يزور فريق مختص من الجمعية المنازل ويسجّل الحالات.' },
+      { title: 'تقييم أعمال الصيانة', text: 'يقيّم الفريق الأضرار ويحسب كميات الصيانة والترميم المطلوبة.' },
+      { title: 'التنفيذ', text: 'تبدأ أعمال الصيانة والترميم، وتستمر طوال السنة.' },
+    ],
+    source: 'المنهجية كما وردت في الملف التعريفي للجمعية (أعمال الصيانة والترميم).',
+  },
+
   // ── 2. THE NEED ──────────────────────────────────────────────────────────
   need: {
     title: 'لماذا نرمم منازل الأيتام؟',
@@ -95,13 +145,15 @@ export default {
 
   // ── 3. WHAT YOUR DONATION SUPPORTS (3–4 cards) ───────────────────────────
   supports: {
-    title: 'ماذا يدعم تبرعك؟',
+    title: 'ماذا تدعم مساهمتك؟',
     intro: 'يُوجَّه التبرع عبر باب «بناء وترميم» الرسمي، الذي تصفه الجمعية بـ: «ساهم معنا بترميم وبناء منازل الأيتام».',
     items: [
       { icon: 'roof',    title: 'إصلاح الأسقف المتهالكة', text: '' },
       { icon: 'wall',    title: 'ترميم الجدران المتصدعة', text: '' },
-      { icon: 'kitchen', title: 'تجهيز المرافق الأساسية', text: 'كالمطابخ والحمامات وغيرها.' },
-      { icon: 'home',    title: 'بناء منازل الأيتام',      text: '«ساهم معنا بترميم وبناء منازل الأيتام».' },
+      { icon: 'kitchen', title: 'تجهيز المطابخ', text: '' },
+      { icon: 'bath',    title: 'تجهيز الحمامات', text: '' },
+      { icon: 'tools',   title: 'المرافق الأساسية وغيرها', text: '' },
+      { icon: 'home',    title: 'بناء منازل الأيتام', text: '' },
     ],
     // Items 1–3: official poster wording. Item 4: official product description.
     itemsSource: 'البنود من إعلان الجمعية لحملة الترميم (مارس 2026) ووصف باب «بناء وترميم» في موقعها.',

@@ -9,6 +9,7 @@ Retrieved 28 Sep 2026 from Internet Archive captures of bahjah.org.om (Feb–Jun
 | Local file | Original official source | Used on |
 |---|---|---|
 | `logo-96/192.webp` | `bahjah.org.om/wp/wp-content/uploads/2025/08/Bahjah.png` | header, all pages |
+| `compare/<n>-before/after-320/640.webp` | Same six official photos (CV p.17), each split at its divider into the «قبل» and «بعد» halves, bottom label strip cropped, resized with Lanczos + light sharpening. **No AI enhancement or content changes.** | before/after sliders (hero + gallery) |
 | `before-after-1…6-427.webp` | Official profile PDF `…/2025/08/CV-Print-Proof.pdf`, page 17 (§16 Maintenance and Restoration, "قبل/بعد" photos) | renovation hero + gallery |
 | `houses-maintenance-300.webp` | `…/2026/02/c34.jpg` (logo of the "ترميم وصيانة المنازل" project, projects page) | renovation evidence |
 | `residential-complex-218.webp` | `…/2026/02/Screenshot-2026-02-08-at-12.37.55-AM.png` (مجمع بهجة السكني) | renovation evidence |

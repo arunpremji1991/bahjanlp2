@@ -17,6 +17,13 @@ tracking/woocommerce-thankyou.php ← final-donation conversion snippet for bahj
 dist/                   ← build output (deploy this)
 ```
 
+## Design (v2)
+
+A "safe home" campaign design (warm paper, deep teal, Bahjah green; Readex Pro + IBM Plex Sans Arabic):
+hero with an interactive **before/after slider** using Bahjah's real renovation photos (drag, tap, or arrow keys; thumbnails switch pairs), the work types supported, an impact gallery (`#impact`, the target of «اكتشف أثر مساهمتك»), why renovation is needed, how a donation reaches the home (the CV's visit → assess → execute method), documented work, the donation card with the OMR 1 = quantity helper, other ways to give, why Bahjah and its awards, FAQ, and a final CTA. Slider pairs are configured in `compare` in the campaign file.
+
+**Image resolution:** the only official before/after photos are the six small side-by-side images in the CV PDF (each half ≈ 210×158 px), so they look soft at large sizes. Ask Bahjah for the original photos and drop them into `assets/img/compare/` with the same names.
+
 ## Build and preview
 
 ```bash
