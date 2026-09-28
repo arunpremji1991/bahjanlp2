@@ -24,6 +24,10 @@ hero with an interactive **before/after slider** using Bahjah's real renovation 
 
 **Image resolution:** the only official before/after photos are the six small side-by-side images in the CV PDF (each half ≈ 210×158 px), so they look soft at large sizes. Ask Bahjah for the original photos and drop them into `assets/img/compare/` with the same names.
 
+## Languages
+
+Every page has an **Arabic ⇄ English toggle** in the header. English pages live at `/en/` (default campaign) and `/en/<slug>/`, built from `campaigns/en/<slug>.mjs`. That file reuses the Arabic config's links, images and settings and overrides only the text. The toggle keeps UTMs and click IDs, and fires a `language_switch` event. Interface strings are in the `STR` dictionary in `src/template.mjs`. A campaign without an English file simply shows no toggle. The payment page itself is Arabic-only, so the English page names the Arabic labels donors will see (بناء وترميم, الكمية, تبرع الان).
+
 ## Build and preview
 
 ```bash

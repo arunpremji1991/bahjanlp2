@@ -56,3 +56,36 @@ export const org = {
     source: 'إعلان الجمعية الرسمي لحملة الترميم (مارس 2026)',
   },
 };
+
+// English display version of the same facts (faithful translation; official
+// English wording used where Bahjah publishes it, e.g. the address and CV text).
+export const orgEn = {
+  ...org,
+  about: {
+    classification: 'Omani Bahjah Orphan Society is classified as a non-governmental charitable association for orphans.',
+    founded: 'Founded on 10/2/2014 in accordance with Royal Decree No. 14/2000.',
+    vision: 'To provide care and assistance to orphans inside and outside their homes. Our goal is to give them hope for a secure future and better opportunities, so that every child in our care grows up psychologically and socially healthy, fully integrated in society.',
+    goal: 'To ensure that every kind of care and support reaches all orphans, including monthly financial support as well as emotional, health, educational and social support.',
+  },
+  awards: {
+    iso:          { ...org.awards.iso,          title: 'ISO certification' },
+    sultanQaboos: { ...org.awards.sultanQaboos, title: 'Sultan Qaboos Award for Voluntary Work' },
+    sanabel:      { ...org.awards.sanabel,      title: 'Al Sanabel Award for Service Excellence in the GCC' },
+    ohrc:         { ...org.awards.ohrc,         title: 'Honoured as best association by the Human Rights Commission' },
+    oq:           { ...org.awards.oq,           title: 'First place in the Sultanate at the OQ level' },
+    bahrain:      { ...org.awards.bahrain,      title: 'Distinguished International Institution Award for Social Innovation, Kingdom of Bahrain' },
+    kuwait:       { ...org.awards.kuwait,       title: 'Khalid Al-Essa Al-Saleh Award (Kuwait), Arab-world level' },
+  },
+  contact: { ...org.contact, addressAr: 'Dhofar / Salalah East / 23 July Street / next to Bank Dhofar' },
+  paymentMethodsOfficial: 'We accept credit and debit cards through the Bank Muscat SmartPay gateway.',
+  otherChannels: {
+    ...org.otherChannels,
+    bankAccounts: [
+      { bank: 'Bank Muscat', number: '0397000008880035' },
+      { bank: 'Bank Dhofar', number: '01041328888001' },
+    ],
+    accountName: 'Omani Bahjah Orphan Society (جمعية بهجة العمانية للأيتام)',
+    sms: { keyword: 'تبرع', number: '90021', value: '1 OMR', operators: 'Omantel and Ooredoo' },
+    source: "Bahjah's official renovation campaign announcement (March 2026)",
+  },
+};

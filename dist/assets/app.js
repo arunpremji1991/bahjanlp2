@@ -16,6 +16,8 @@
   var T = LP.tracking || {};
   var C = LP.content || {};
   var CURRENCY = LP.currency || 'OMR';
+  var I = LP.i18n || {};
+  var LTR = document.documentElement.dir === 'ltr';
   window.dataLayer = window.dataLayer || [];
 
   /* ── Safe storage ───────────────────────────────────────────────────── */
@@ -241,13 +243,13 @@
       var v = Math.floor(Number(calc.value));
       if (v > 0) {
         selectedAmount = v;
-        calcOut.innerHTML = 'اكتب <strong>' + (v / (LP.unit || 1)) + '</strong> في خانة «الكمية» بصفحة الدفع = تبرع بـ <strong>' + v + ' ر.ع.</strong>';
+        calcOut.innerHTML = (I.calcOut || '{n} = {v}').replace('{n}', String(v / (LP.unit || 1))).replace('{v}', String(v));
         setPaymentQuantity(v / (LP.unit || 1));
         clearTimeout(calcTimer);
         calcTimer = setTimeout(function () { track('select_amount', { value: v, currency: CURRENCY, method: 'custom' }); }, 800);
       } else {
         selectedAmount = null;
-        calcOut.textContent = 'اكتب المبلغ لتعرف ماذا تُدخل في خانة الكمية.';
+        calcOut.textContent = I.calcHint || '';
         setPaymentQuantity(0);
       }
     });
@@ -263,8 +265,8 @@
       var txt = btn.getAttribute('data-copy');
       var label = btn.querySelector('span');
       var done = function () {
-        btn.classList.add('is-done'); if (label) label.textContent = 'تم النسخ';
-        setTimeout(function () { btn.classList.remove('is-done'); if (label) label.textContent = 'نسخ'; }, 2000);
+        btn.classList.add('is-done'); if (label) label.textContent = I.copied || '✓';
+        setTimeout(function () { btn.classList.remove('is-done'); if (label) label.textContent = I.copy || ''; }, 2000);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, done);
       else { var t = document.createElement('textarea'); t.value = txt; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e) {} t.remove(); done(); }
@@ -301,7 +303,8 @@
     el.style.setProperty('--pos', pos + '%');
     var r = el.querySelector('[data-ba-range]');
     if (r) r.value = Math.round(pos);
-    el.dataset.side = pos < 22 ? 'before' : pos > 78 ? 'after' : '';
+    var lo = LTR ? 'after' : 'before', hi = LTR ? 'before' : 'after';
+    el.dataset.side = pos < 22 ? lo : pos > 78 ? hi : '';
   }
   function firstInteraction(el) {
     if (interacted.has(el)) return;
@@ -371,9 +374,9 @@
       var i = Number(btn.getAttribute('data-thumb')), pr = pairs[i];
       if (!pr || !heroBA) return;
       var after = heroBA.querySelector('[data-ba-after]'), before = heroBA.querySelector('[data-ba-before]');
-      after.srcset = pr.afterSm + ' 320w, ' + pr.after + ' 640w'; after.src = pr.after; after.alt = 'بعد الترميم: ' + pr.caption;
-      before.srcset = pr.beforeSm + ' 320w, ' + pr.before + ' 640w'; before.src = pr.before; before.alt = 'قبل الترميم: ' + pr.caption;
-      var r = heroBA.querySelector('[data-ba-range]'); if (r) r.setAttribute('aria-label', 'مقارنة قبل وبعد: ' + pr.caption);
+      after.srcset = pr.afterSm + ' 320w, ' + pr.after + ' 640w'; after.src = pr.after; after.alt = (I.afterAlt || '') + pr.caption;
+      before.srcset = pr.beforeSm + ' 320w, ' + pr.before + ' 640w'; before.src = pr.before; before.alt = (I.beforeAlt || '') + pr.caption;
+      var r = heroBA.querySelector('[data-ba-range]'); if (r) r.setAttribute('aria-label', (I.compare || '') + pr.caption);
       if (heroCap) heroCap.textContent = pr.caption;
       heroBA._stopHint = true; setPos(heroBA, 50);
       document.querySelectorAll('[data-thumb]').forEach(function (b) {
@@ -387,6 +390,18 @@
   if (more) more.addEventListener('click', function () {
     var g = document.querySelector('[data-impact-grid]'); if (g) g.classList.add('is-expanded');
     more.remove(); track('gallery_expand');
+  });
+
+  /* ── Language switch: keep UTMs / click IDs when changing language ──── */
+  document.querySelectorAll('[data-lang-switch]').forEach(function (a) {
+    a.addEventListener('click', function () {
+      try {
+        var u = new URL(a.getAttribute('href'), location.href);
+        new URLSearchParams(location.search).forEach(function (v, k) { if (!u.searchParams.has(k)) u.searchParams.set(k, v); });
+        a.href = u.toString();
+      } catch (e) {}
+      track('language_switch', { to: a.getAttribute('data-lang-switch') });
+    });
   });
 
   /* ── 10. Header shadow + reveal on scroll ───────────────────────────── */

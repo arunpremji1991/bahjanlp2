@@ -57,8 +57,23 @@ for (const slug of slugs) {
   for (const img of [c.hero.image?.src, ...(c.evidence.gallery?.images || []).map((i) => i.src)].filter(Boolean))
     if (!existsSync(img)) console.warn(`  ! ${slug}: missing image ${img}`);
 
+  // English counterpart (campaigns/en/<slug>.mjs), if one exists.
+  const enPath = `campaigns/en/${slug}.mjs`;
+  const en = existsSync(enPath) ? (await import(pathToFileURL(enPath).href)).default : null;
+  if (en) {
+    const enErrs = validate(en);
+    if (enErrs.length) { console.error(`✗ en/${slug}:\n  - ${enErrs.join('\n  - ')}`); process.exitCode = 1; }
+  }
+  const isDefault = slug === DEFAULT;
+
   await mkdir(`dist/${slug}`, { recursive: true });
-  await writeFile(`dist/${slug}/index.html`, bust(render(c, tracking, credits, '../')));
-  if (slug === DEFAULT) await writeFile('dist/index.html', bust(render(c, tracking, credits, '')));
+  await writeFile(`dist/${slug}/index.html`, bust(render(c, tracking, credits, '../', en ? { alt: { href: `../en/${slug}/`, abs: en.seo.canonical } } : {})));
+  if (isDefault) await writeFile('dist/index.html', bust(render(c, tracking, credits, '', en ? { alt: { href: 'en/', abs: en.seo.canonical } } : {})));
+  if (en) {
+    await mkdir(`dist/en/${slug}`, { recursive: true });
+    await writeFile(`dist/en/${slug}/index.html`, bust(render(en, tracking, credits, '../../', { alt: { href: `../../${slug}/`, abs: c.seo.canonical } })));
+    if (isDefault) await writeFile('dist/en/index.html', bust(render(en, tracking, credits, '../', { alt: { href: '../', abs: c.seo.canonical } })));
+    console.log(`✓ dist/en/${slug}/index.html${isDefault ? '  (+ dist/en/index.html)' : ''}`);
+  }
   console.log(`✓ dist/${slug}/index.html${slug === DEFAULT ? '  (+ dist/index.html)' : ''}`);
 }
