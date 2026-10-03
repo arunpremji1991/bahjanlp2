@@ -48,6 +48,7 @@ const bust = (html) => html.replace(/(assets\/(?:styles\.css|app\.js))"/g, `$1?v
 // Credits map keys are "assets/…"; published paths are relative to each page.
 for (const slug of slugs) {
   const { default: c } = await import(pathToFileURL(`campaigns/${slug}.mjs`).href);
+  if (c.template === 'waqf') { console.log(`… ${slug}: waqf template not built yet (src/waqf.mjs pending), skipped`); continue; }
   const errs = validate(c);
   if (errs.length) {
     console.error(`✗ ${slug}:\n  - ${errs.join('\n  - ')}`);

@@ -1,122 +1,10 @@
-// Renders a campaign config into a complete static HTML page.
-// Pure function: (campaign, tracking, credits, assetBase) => html string.
-
-const esc = (s = '') =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-const icons = {
-  roof: '<path d="M2.5 12 12 4l9.5 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
-  wall: '<rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.3h18M3 14.7h18M9 4v5.3M15 9.3v5.4M9 14.7V20"/><path d="m14.5 4-1.8 3.2 2.2 2.4-1.6 3.3"/>',
-  kitchen: '<path d="M7 3v5a2 2 0 0 0 4 0V3M9 8v13"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/>',
-  bath: '<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V6a2 2 0 0 1 3.5-1.3"/><path d="M7 19l-1 2M17 19l1 2"/>',
-  tools: '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.6 2.6l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.2-.6-.6-2.2z"/>',
-  home: '<path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M12 11.2c-1-1.4-3.4-.8-3.4 1.1 0 1.7 2.2 3 3.4 3.9 1.2-.9 3.4-2.2 3.4-3.9 0-1.9-2.4-2.5-3.4-1.1z"/>',
-  lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-  shield: '<path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/>',
-  arrow: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
-  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
-  bank: '<path d="M3 10h18L12 4zM5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
-  sms: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/>',
-  app: '<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/>',
-  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
-  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h9"/>',
-  check: '<path d="m5 12 5 5 9-10"/>',
-  award: '<circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/>',
-  handle: '<path d="m9 7-5 5 5 5M15 7l5 5-5 5"/>',
-  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
-  quote: '<path fill="currentColor" stroke="none" d="M9.6 6C6.5 6.3 4 9 4 12.3V18h6.2v-6.2H7.1c0-2.2 1.2-3.6 2.9-3.9zM19.6 6c-3.1.3-5.6 3-5.6 6.3V18h6.2v-6.2h-3.1c0-2.2 1.2-3.6 2.9-3.9z"/>',
-};
-const icon = (name, cls = 'ico') =>
-  `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${icons[name] || ''}</svg>`;
-
-
-// ── UI strings (page content itself lives in the campaign configs) ─────────
-const STR = {
-  ar: {
-    skip: 'تخطَّ إلى المحتوى', logo: 'شعار ', before: 'قبل', after: 'بعد',
-    beforeAlt: 'قبل الترميم: ', afterAlt: 'بعد الترميم: ', compare: 'مقارنة قبل وبعد: ',
-    heroCapSrc: 'من أعمال الجمعية الموثقة', thumbs: 'اختر صورة للمقارنة',
-    progress: 'تقدم الحملة', of: 'من', per: 'حسب', officialAnn: 'الإعلان الرسمي للجمعية',
-    cur: 'ر.ع.', chooseAmount: 'اختر مبلغًا', qtyOnPay: 'الكمية في صفحة الدفع: ',
-    calcLabel: 'كم تريد أن تساهم؟', calcHint: 'اكتب المبلغ لتعرف ماذا تُدخل في خانة «الكمية».',
-    calcOut: 'اكتب <strong>{n}</strong> في خانة «الكمية» بصفحة الدفع = تبرع بـ <strong>{v} ر.ع.</strong>',
-    unitOne: 'ريال عماني واحد',
-    unitTxt: 'تعرض صفحة الدفع الرسمية الريال بثلاث خانات عشرية (1,000 بيسة). ',
-    unitTxt1: 'اكتب مبلغ مساهمتك بالريال في خانة <strong>«الكمية»</strong>.',
-    unitTxtN: (v) => `كل وحدة تساوي ${v} ر.ع.، فحدّد عدد الوحدات في خانة <strong>«الكمية»</strong>.`,
-    kSupports: 'الأعمال التي تدعمها', kImpact: 'اكتشف أثر مساهمتك', kNeed: 'لماذا الترميم؟',
-    kProcess: 'من مساهمتك إلى المنزل', kEvidence: 'سجلّ موثّق', kGive: 'طريقة المساهمة',
-    kOther: 'طرق أخرى', kWhy: 'لماذا بهجة؟', kFaq: 'أسئلة شائعة',
-    more: (n) => `عرض ${n} صور أخرى`, viewProfile: 'عرض الملف التعريفي', source: 'المصدر: ',
-    evSource: 'المصدر على موقع الجمعية',
-    step1: (cta) => `اضغط «${cta}».`,
-    step2: (label, unit) => `في صفحة «${label}» الرسمية، ${unit ? 'اكتب المبلغ في خانة «الكمية»' : 'حدّد المبلغ'} ثم اضغط «تبرع الآن».`,
-    step3: 'أكمل الدفع بالبطاقة عبر بوابة بنك مسقط SmartPay.',
-    secureTail: '، والدفع ببطاقات الائتمان والخصم عبر بوابة بنك مسقط SmartPay.',
-    otherTitle: 'طرق أخرى للتبرع', bank: 'التحويل البنكي', copy: 'نسخ', copied: 'تم النسخ', copyAria: 'نسخ رقم حساب ',
-    accName: 'الحسابات باسم: ', sms: 'رسالة نصية',
-    smsText: (s) => `أرسل كلمة <strong>«${s.keyword}»</strong> إلى الرقم المجاني <strong dir="ltr">${s.number}</strong> للتبرع بـ${s.value} للأيتام (${s.operators}).`,
-    smsBtn: 'إرسال الرسالة', app: 'تطبيق بهجة', appText: 'حمّل تطبيق الجمعية للتبرع والمتابعة.',
-    whyTitle: 'جهة موثوقة ترعى الأيتام منذ 2014', fact1: 'جمعية خيرية غير حكومية', fact2: 'تأسست في 10 فبراير 2014', fact3: 'رؤيتنا',
-    awardsTitle: 'شهادات وجوائز حصلت عليها الجمعية', yearSfx: 'م', awardsSrc: 'كما وردت في موقع الجمعية الرسمي.',
-    faqTitle: 'كل ما تحتاج معرفته', whatsapp: 'واتساب', email: 'البريد الإلكتروني',
-    official: 'الموقع الرسمي', allDon: 'كل أبواب التبرع',
-    consentAria: 'ملفات تعريف الارتباط', consent: 'نستخدم ملفات تعريف الارتباط لقياس أداء حملاتنا الإعلانية وتحسينها.',
-    accept: 'موافق', decline: 'رفض',
-    langLabel: 'English', langAria: 'Switch to English', langCode: 'en',
-    city: 'صلالة', region: 'ظفار', locale: 'ar_OM',
-  },
-  en: {
-    skip: 'Skip to content', logo: 'Logo of ', before: 'Before', after: 'After',
-    beforeAlt: 'Before renovation: ', afterAlt: 'After renovation: ', compare: 'Before/after comparison: ',
-    heroCapSrc: "From Bahjah's documented work", thumbs: 'Choose a photo to compare',
-    progress: 'Campaign progress', of: 'of', per: 'According to', officialAnn: "Bahjah's official announcement",
-    cur: 'OMR', chooseAmount: 'Choose an amount', qtyOnPay: 'Quantity on the payment page: ',
-    calcLabel: 'How much would you like to give?', calcHint: 'Type an amount to see what to enter in the “الكمية” (Quantity) field.',
-    calcOut: 'Enter <strong>{n}</strong> in the “الكمية” (Quantity) field on the payment page = a gift of <strong>{v} OMR</strong>',
-    unitOne: 'One Omani rial',
-    unitTxt: 'The official payment page (in Arabic) shows rials with three decimal places (1,000 baisa). ',
-    unitTxt1: 'Type your gift in rials in the <strong>“الكمية” (Quantity)</strong> field.',
-    unitTxtN: (v) => `Each unit is ${v} OMR, so enter the number of units in the <strong>“الكمية” (Quantity)</strong> field.`,
-    kSupports: 'The work you support', kImpact: 'See the impact', kNeed: 'Why renovation?',
-    kProcess: 'From your gift to the home', kEvidence: 'Documented record', kGive: 'How to give',
-    kOther: 'More options', kWhy: 'Why Bahjah?', kFaq: 'FAQ',
-    more: (n) => `Show ${n} more photos`, viewProfile: 'View the profile', source: 'Source: ',
-    evSource: "Source on Bahjah's website",
-    step1: (cta) => `Tap “${cta}”.`,
-    step2: (label, unit, labelAr) => `On the official “${labelAr || label}” (${label}) page, ${unit ? 'enter your amount in the “الكمية” (Quantity) field' : 'choose the amount'}, then tap “تبرع الان” (Donate now).`,
-    step3: 'Complete payment by card through the Bank Muscat SmartPay gateway.',
-    secureTail: ' Credit and debit card payments go through the Bank Muscat SmartPay gateway.',
-    otherTitle: 'Other ways to donate', bank: 'Bank transfer', copy: 'Copy', copied: 'Copied', copyAria: 'Copy account number: ',
-    accName: 'Account name: ', sms: 'Text message',
-    smsText: (s) => `Text the word <strong>“${s.keyword}”</strong> to the toll-free number <strong dir="ltr">${s.number}</strong> to donate ${s.value} to orphans (${s.operators}).`,
-    smsBtn: 'Send the text', app: 'Bahjah app', appText: "Download Bahjah's app to donate and follow its work.",
-    whyTitle: 'A trusted orphan-care society since 2014', fact1: 'Non-governmental charity', fact2: 'Founded 10 February 2014', fact3: 'Our vision',
-    awardsTitle: 'Certificates and awards received by Bahjah', yearSfx: '', awardsSrc: "As listed on Bahjah's official website.",
-    faqTitle: 'Everything you need to know', whatsapp: 'WhatsApp', email: 'Email',
-    official: 'Official website', allDon: 'All donation options',
-    consentAria: 'Cookies', consent: 'We use cookies to measure and improve our advertising campaigns.',
-    accept: 'Accept', decline: 'Decline',
-    langLabel: 'العربية', langAria: 'التبديل إلى العربية', langCode: 'ar',
-    city: 'Salalah', region: 'Dhofar', locale: 'en_US',
-  },
-};
+// Renders the renovation-style campaign page (before/after slider, work types,
+// impact gallery, process, donate card). Shared shell lives in ./shared.mjs.
+import { esc, icon, pageContext, baseLd, shell } from './shared.mjs';
 
 export function render(c, tracking, credits, base = '', opts = {}) {
-  const lang = c.lang || 'ar';
-  const t = STR[lang];
-  const dir = lang === 'ar' ? 'rtl' : 'ltr';
-  const orgName = lang === 'ar' ? c.org.nameAr : c.org.nameEn;
-  const alt = opts.alt; // { href, abs } of the other-language page
-  const o = c.org;
-  const a = (p) => base + p;
-  const src = (p) => (credits[p] ? ` data-source="${esc(credits[p])}"` : '');
-  const fillOrg = (s) =>
-    s
-      .replace('{org.phones}', o.contact.phones.join(' – '))
-      .replace('{org.whatsapp}', o.contact.whatsapp.replace(/^968/, ''))
-      .replace('{org.email}', o.contact.email)
-      .replace('{org.address}', o.contact.addressAr);
+  const ctx = pageContext(c, credits, base, opts);
+  const { lang, t, o, a, src, fillOrg } = ctx;
 
   const payUrl = c.payment.url;
   const ctaBtn = (loc, extra = '', label = c.cta.primary) =>
@@ -218,27 +106,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
       </div>`
     : '';
 
-  // ── JSON-LD ───────────────────────────────────────────────────────────────
-  const ld = [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'NGO',
-      name: o.nameAr,
-      alternateName: o.nameEn,
-      url: o.website,
-      logo: new URL(a(o.logo.src), c.seo.canonical).href,
-      foundingDate: '2014-02-10',
-      email: o.contact.email,
-      telephone: '+968' + o.contact.phones[0],
-      address: { '@type': 'PostalAddress', addressLocality: t.city, addressRegion: t.region, addressCountry: 'OM' },
-      sameAs: [o.contact.x],
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: c.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: fillOrg(f.a) } })),
-    },
-  ];
+  const ld = baseLd(c, ctx);
 
   const pageConfig = {
     slug: c.slug,
@@ -263,57 +131,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const ev = c.evidence;
   const hasEvidence = ev && ev.items && ev.items.length;
 
-  return `<!doctype html>
-<html lang="${lang}" dir="${dir}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(c.seo.title)}</title>
-<meta name="description" content="${esc(c.seo.description)}">
-<link rel="canonical" href="${esc(c.seo.canonical)}">
-${alt ? `<link rel="alternate" hreflang="${lang}" href="${esc(c.seo.canonical)}">\n<link rel="alternate" hreflang="${t.langCode}" href="${esc(alt.abs)}">` : ''}
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#faf7f1">
-<meta name="color-scheme" content="light">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="${t.locale}">
-<meta property="og:site_name" content="${esc(orgName)}">
-<meta property="og:title" content="${esc(c.seo.title)}">
-<meta property="og:description" content="${esc(c.seo.description)}">
-<meta property="og:url" content="${esc(c.seo.canonical)}">
-<meta property="og:image" content="${esc(new URL(a(c.seo.ogImage), c.seo.canonical).href)}">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${esc(c.seo.ogImageAlt)}">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@bahjah1_omani">
-<link rel="icon" href="${a('assets/img/logo-96.webp')}" type="image/webp">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
-${heroPair ? `<link rel="preload" as="image" href="${a(heroPair.before)}" fetchpriority="high">` : c.hero.image ? `<link rel="preload" as="image" href="${a(c.hero.image.src)}" fetchpriority="high">` : ''}
-<link rel="stylesheet" href="${a('assets/styles.css')}">
-<script type="application/ld+json">${JSON.stringify(ld)}</script>
-<script>window.BAHJAH_LP=${JSON.stringify(pageConfig)};</script>
-<script src="${a('assets/app.js')}" defer></script>
-</head>
-<body>
-<a class="skip" href="#main">${t.skip}</a>
-
-<header class="site-header" data-header>
-  <div class="wrap header-in">
-    <a class="brand" href="${esc(o.website)}" rel="noopener" data-outbound="org_home">
-      <img src="${a(o.logo.src1x)}" srcset="${a(o.logo.src1x)} 1x, ${a(o.logo.src)} 2x" width="38" height="42" alt="${t.logo}${esc(orgName)}"${src(o.logo.src)}>
-      <span class="brand-name">${esc(orgName)}</span>
-    </a>
-    <div class="header-actions">
-      ${alt ? `<a class="lang-switch" href="${esc(alt.href)}" hreflang="${t.langCode}" lang="${t.langCode}" aria-label="${t.langAria}" data-lang-switch="${t.langCode}">${icon('globe')}<span>${t.langLabel}</span></a>` : ''}
-      <a class="btn btn-sm btn-primary header-cta" href="${esc(payUrl)}" data-cta="header" data-payment rel="noopener">${esc(c.cta.short)}</a>
-    </div>
-  </div>
-</header>
-
-<main id="main">
+  const main = `<main id="main">
 
   <!-- ═════ HERO ═════ -->
   <section class="hero" data-section="hero">
@@ -607,36 +425,13 @@ ${heroPair ? `<link rel="preload" as="image" href="${a(heroPair.before)}" fetchp
       </div>
     </div>
   </section>
-</main>
+</main>`;
 
-<footer class="site-footer">
-  <div class="wrap foot-in">
-    <div class="foot-brand">
-      <img src="${a(o.logo.src1x)}" width="38" height="42" alt="" loading="lazy">
-      <div><strong>${esc(orgName)}</strong><span>${esc(lang === 'ar' ? o.nameEn : o.nameAr)}</span></div>
-    </div>
-    <p>${esc(o.contact.addressAr)} · <span dir="ltr">${esc(o.contact.phones.join(' – '))}</span> · ${esc(o.contact.email)}</p>
-    <p><a href="${esc(o.website)}" rel="noopener" data-outbound="org_home">${t.official}</a> · <a href="${esc(o.donationsHub)}" rel="noopener" data-outbound="donations_hub">${t.allDon}</a> · <a href="${esc(o.contact.x)}" target="_blank" rel="noopener" data-outbound="x">X</a></p>
-  </div>
-</footer>
-
-<div class="sticky-cta" data-sticky aria-hidden="true">
-  <a class="btn btn-primary btn-block" href="${esc(payUrl)}" data-cta="sticky" data-payment rel="noopener" tabindex="-1"><span>${esc(c.cta.primary)}</span>${icon('arrow', 'ico ico-dir')}</a>
-</div>
-
-${
-  tracking.requireConsent
-    ? `<div class="consent" data-consent hidden role="dialog" aria-live="polite" aria-label="${t.consentAria}">
-  <p>${t.consent}</p>
-  <div class="row">
-    <button type="button" class="btn btn-sm btn-primary" data-consent-accept>${t.accept}</button>
-    <button type="button" class="btn btn-sm btn-ghost" data-consent-decline>${t.decline}</button>
-  </div>
-</div>`
-    : ''
-}
-<noscript><style>.sticky-cta{display:none}.ba-range{display:none}</style></noscript>
-</body>
-</html>
-`;
+  const payCta = (loc, label) => ({ href: payUrl, attrs: `data-cta="${loc}" data-payment rel="noopener"`, label });
+  return shell(c, ctx, {
+    tracking, pageConfig, ld, main,
+    preload: heroPair ? `<link rel="preload" as="image" href="${a(heroPair.before)}" fetchpriority="high">` : c.hero.image ? `<link rel="preload" as="image" href="${a(c.hero.image.src)}" fetchpriority="high">` : '',
+    headerCta: payCta('header', c.cta.short),
+    stickyCta: payCta('sticky', c.cta.primary),
+  });
 }
