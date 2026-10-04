@@ -13,6 +13,7 @@ export const tracking = {
   metaPixelId: '',                 // '123456789012345'
   googleAdsId: '',                 // 'AW-XXXXXXXXXX'
   googleAdsPaymentClickLabel: '',  // conversion label for "payment page click" (secondary conversion)
+  googleAdsLeadLabel: '',          // conversion label for contact-mode donations (waqf WhatsApp click)
 
   // GA4 cross-domain measurement, needed only if this page is NOT hosted on bahjah.org.om
   crossDomains: ['bahjah.org.om'],

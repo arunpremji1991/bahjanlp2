@@ -8,9 +8,17 @@ import { readdir, mkdir, writeFile, copyFile, cp, rm, readFile } from 'node:fs/p
 import { createHash } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
-import { render } from './src/template.mjs';
+import { render as renderCampaign } from './src/template.mjs';
+import { renderWaqf } from './src/waqf.mjs';
+
+// Pick the page template a campaign asks for (default: renovation-style campaign page).
+const render = (c, ...rest) => (c.template === 'waqf' ? renderWaqf : renderCampaign)(c, ...rest);
 import { tracking } from './campaigns/_tracking.mjs';
 import { credits } from './assets/credits.mjs';
+import { SITE_URL } from './campaigns/_site.mjs';
+
+// Canonical URL of a published page path (e.g. 'renovation/', 'en/waqf/').
+const at = (c, path) => ({ ...c, seo: { ...c.seo, canonical: `${SITE_URL.replace(/\/$/, '')}/${path}` } });
 
 const DEFAULT = 'renovation';
 const only = process.argv[2];
@@ -25,7 +33,8 @@ if (!slugs.length) {
 // Basic guard-rails so a config can't ship with obviously wrong data.
 function validate(c) {
   const errs = [];
-  if (!/^https:\/\/bahjah\.org\.om\//.test(c.payment?.url || '')) errs.push('payment.url must be an official https://bahjah.org.om/ URL');
+  if (c.payment?.mode !== 'contact' && !/^https:\/\/bahjah\.org\.om\//.test(c.payment?.url || '')) errs.push('payment.url must be an official https://bahjah.org.om/ URL');
+  if (c.payment?.mode === 'contact' && !(c.payment.whatsappMessage || '').includes('{amount}')) errs.push('payment.whatsappMessage must include {amount}');
   if (!c.cta?.primary) errs.push('cta.primary is required');
   const p = c.hero?.progress;
   if (p?.enabled && !(p.target && p.raised != null && p.sourceUrl && p.asOf))
@@ -47,15 +56,14 @@ const bust = (html) => html.replace(/(assets\/(?:styles\.css|app\.js))"/g, `$1?v
 
 // Credits map keys are "assets/…"; published paths are relative to each page.
 for (const slug of slugs) {
-  const { default: c } = await import(pathToFileURL(`campaigns/${slug}.mjs`).href);
-  if (c.template === 'waqf') { console.log(`… ${slug}: waqf template not built yet (src/waqf.mjs pending), skipped`); continue; }
+  let { default: c } = await import(pathToFileURL(`campaigns/${slug}.mjs`).href);
   const errs = validate(c);
   if (errs.length) {
     console.error(`✗ ${slug}:\n  - ${errs.join('\n  - ')}`);
     process.exitCode = 1;
     continue;
   }
-  for (const img of [c.hero.image?.src, ...(c.evidence.gallery?.images || []).map((i) => i.src)].filter(Boolean))
+  for (const img of [c.hero.image?.src, ...(c.evidence?.gallery?.images || []).map((i) => i.src)].filter(Boolean))
     if (!existsSync(img)) console.warn(`  ! ${slug}: missing image ${img}`);
 
   // English counterpart (campaigns/en/<slug>.mjs), if one exists.
@@ -66,14 +74,17 @@ for (const slug of slugs) {
     if (enErrs.length) { console.error(`✗ en/${slug}:\n  - ${enErrs.join('\n  - ')}`); process.exitCode = 1; }
   }
   const isDefault = slug === DEFAULT;
+  // Canonical = the /<slug>/ path (the root copy of the default campaign points to it too).
+  c = at(c, `${slug}/`);
+  const enC = en ? at(en, `en/${slug}/`) : null;
 
   await mkdir(`dist/${slug}`, { recursive: true });
-  await writeFile(`dist/${slug}/index.html`, bust(render(c, tracking, credits, '../', en ? { alt: { href: `../en/${slug}/`, abs: en.seo.canonical } } : {})));
-  if (isDefault) await writeFile('dist/index.html', bust(render(c, tracking, credits, '', en ? { alt: { href: 'en/', abs: en.seo.canonical } } : {})));
+  await writeFile(`dist/${slug}/index.html`, bust(render(c, tracking, credits, '../', en ? { alt: { href: `../en/${slug}/`, abs: enC.seo.canonical } } : {})));
+  if (isDefault) await writeFile('dist/index.html', bust(render(c, tracking, credits, '', en ? { alt: { href: 'en/', abs: enC.seo.canonical } } : {})));
   if (en) {
     await mkdir(`dist/en/${slug}`, { recursive: true });
-    await writeFile(`dist/en/${slug}/index.html`, bust(render(en, tracking, credits, '../../', { alt: { href: `../../${slug}/`, abs: c.seo.canonical } })));
-    if (isDefault) await writeFile('dist/en/index.html', bust(render(en, tracking, credits, '../', { alt: { href: '../', abs: c.seo.canonical } })));
+    await writeFile(`dist/en/${slug}/index.html`, bust(render(enC, tracking, credits, '../../', { alt: { href: `../../${slug}/`, abs: c.seo.canonical } })));
+    if (isDefault) await writeFile('dist/en/index.html', bust(render(enC, tracking, credits, '../', { alt: { href: '../', abs: c.seo.canonical } })));
     console.log(`✓ dist/en/${slug}/index.html${isDefault ? '  (+ dist/en/index.html)' : ''}`);
   }
   console.log(`✓ dist/${slug}/index.html${slug === DEFAULT ? '  (+ dist/index.html)' : ''}`);

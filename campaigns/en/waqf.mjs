@@ -43,7 +43,7 @@ export default {
     title: 'Bahjah Waqf | Sadaqah Jariyah for Orphans in Oman – Omani Bahjah Orphan Society',
     description:
       "Give to Bahjah Waqf: ongoing charity (Sadaqah Jariyah) with lasting impact. The revenue of the Omani Bahjah Orphan Society's endowments returns to the society and its projects serving orphans, including its charity buildings and the Bahjah Waqf Complex.",
-    canonical: 'https://bahjah.org.om/campaign/en/waqf/', // ← set to the real published URL
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImageAlt: 'Bahjah Waqf – Sadaqah Jariyah for orphans',
   },
 

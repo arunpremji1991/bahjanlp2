@@ -270,7 +270,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
           <h3>${esc(e.title)}</h3>
           <p>${esc(e.text)}</p>
           ${e.note ? `<p class="ev-note">${esc(e.note)}</p>` : ''}
-          ${e.link ? `<a class="ev-link" href="${esc(e.link)}" target="_blank" rel="noopener" data-outbound="evidence">${t.evSource}</a>` : ''}
+          ${e.link ? `<a class="ev-link" href="${esc(e.link)}" target="_blank" rel="noopener" data-outbound="evidence">${e.linkArchived ? t.evSourceArchived : t.evSource}</a>` : ''}
         </li>`
           )
           .join('\n        ')}

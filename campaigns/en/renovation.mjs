@@ -27,7 +27,7 @@ export default {
     title: "Help renovate orphan families' homes | Omani Bahjah Orphan Society",
     description:
       "Donate through the official website of the Omani Bahjah Orphan Society to support the maintenance, renovation and building of orphan families' homes: repairing deteriorated roofs, restoring cracked walls and preparing essential facilities.",
-    canonical: 'https://bahjah.org.om/campaign/en/renovation/', // ← set to the real published URL
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImageAlt: "Before and after photos of Bahjah's home maintenance and renovation work",
   },
 

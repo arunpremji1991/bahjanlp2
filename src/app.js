@@ -148,6 +148,15 @@
           }
         }
         break;
+      case 'lead_click': // contact-mode donation (e.g. WhatsApp to Bahjah for the waqf)
+        fb && fb('track', 'Lead', { content_name: C.contentName, content_category: C.contentCategory, value: p.value || undefined, currency: CURRENCY });
+        if (direct) {
+          gtag('event', 'generate_lead', { currency: CURRENCY, value: p.value || undefined, method: p.method, cta_location: p.cta_location });
+          if (T.googleAdsId && T.googleAdsLeadLabel) {
+            gtag('event', 'conversion', { send_to: T.googleAdsId + '/' + T.googleAdsLeadLabel, value: p.value || undefined, currency: CURRENCY, transport_type: 'beacon' });
+          }
+        }
+        break;
       case 'cta_click':
         fb && fb('trackCustom', 'CTAClick', { cta_location: p.cta_location, content_name: C.contentName });
         direct && gtag('event', 'cta_click', { cta_location: p.cta_location });
@@ -201,6 +210,9 @@
       if (a.hasAttribute('data-payment')) {
         track('payment_click', { cta_location: loc, value: selectedAmount || undefined, destination: LP.paymentUrl });
       }
+      if (a.hasAttribute('data-lead')) {
+        track('lead_click', { cta_location: loc, method: a.getAttribute('data-lead'), value: a.getAttribute('data-lead') === 'whatsapp' ? selectedAmount || undefined : undefined });
+      }
     } else if (a.hasAttribute('data-contact')) {
       track('contact_click', { method: a.getAttribute('data-contact') });
     } else if (a.hasAttribute('data-outbound')) {
@@ -220,6 +232,42 @@
       track('select_amount', { value: selectedAmount, currency: CURRENCY });
     });
     sync();
+  }
+
+  /* ── 6a. Waqf amount picker → pre-filled WhatsApp message ───────────── */
+  var wAmounts = document.querySelector('[data-w-amounts]');
+  if (wAmounts && LP.lead) {
+    var wOther = document.querySelector('[data-w-other]');
+    var wInput = document.querySelector('[data-w-other-input]');
+    var wSummary = document.querySelector('[data-w-summary]');
+    var leadLinks = document.querySelectorAll('a[data-lead="whatsapp"]');
+    var setLead = function (v) {
+      selectedAmount = v > 0 ? v : null;
+      var msg = selectedAmount ? LP.lead.message.replace(/\{amount\}/g, String(v)) : LP.lead.messageNoAmount;
+      var href = 'https://wa.me/' + LP.lead.whatsapp + '?text=' + encodeURIComponent(msg);
+      leadLinks.forEach(function (a) { a.href = href; });
+      if (wSummary) wSummary.textContent = selectedAmount ? v + ' ' + (I.cur || '') : '—';
+    };
+    var wSync = function (fromUser) {
+      var r = wAmounts.querySelector('input:checked');
+      var isOther = r && r.value === 'other';
+      if (wOther) wOther.hidden = !isOther;
+      var v = isOther ? Math.floor(Number(wInput && wInput.value)) : Number(r && r.value);
+      setLead(v);
+      if (isOther && fromUser && wInput) wInput.focus();
+      return v;
+    };
+    var wTimer;
+    wAmounts.addEventListener('change', function () {
+      var v = wSync(true);
+      if (v > 0) track('select_amount', { value: v, currency: CURRENCY });
+    });
+    if (wInput) wInput.addEventListener('input', function () {
+      var v = wSync(false);
+      clearTimeout(wTimer);
+      if (v > 0) wTimer = setTimeout(function () { track('select_amount', { value: v, currency: CURRENCY, method: 'custom' }); }, 800);
+    });
+    wSync(false);
   }
 
   /* ── 6b. Amount → quantity helper (unit-priced WooCommerce products) ─ */
@@ -411,7 +459,7 @@
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
   if (!reduceMotion && 'IntersectionObserver' in window) {
-    var targets = document.querySelectorAll('.sec-head, .work, .impact-card, .step, .ev, .fact, .award, .way, .give-card, .quote-card, .final-in');
+    var targets = document.querySelectorAll('.sec-head, .work, .impact-card, .step, .ev, .fact, .award, .way, .give-card, .quote-card, .final-in, .w-flow-step, .w-card, .w-stat, .w-proj, .w-give-card, .w-corp-box');
     var ro = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });

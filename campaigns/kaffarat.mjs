@@ -16,7 +16,7 @@ export default {
   seo: {
     title: 'أخرج كفارتك للأيتام | جمعية بهجة العمانية للأيتام',
     description: 'تستقبل جمعية بهجة العمانية للأيتام كفارات اليمين والصيام عبر موقعها الرسمي: كفارة اليمين 15 ر.ع.، وكفارة الصيام 1.5 ر.ع. عن اليوم و45 ر.ع. عن شهر رمضان كاملًا.',
-    canonical: 'https://bahjah.org.om/campaign/kaffarat/',
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImage: 'assets/img/og-renovation.jpg', // ← replace with a campaign-specific official image
     ogImageAlt: 'جمعية بهجة العمانية للأيتام',
   },

@@ -17,7 +17,7 @@ export default {
     title: 'ساهم في ترميم منازل الأيتام | جمعية بهجة العمانية للأيتام',
     description:
       'تبرّع عبر الموقع الرسمي لجمعية بهجة العمانية للأيتام لدعم صيانة وترميم وبناء منازل أسر الأيتام: إصلاح الأسقف المتهالكة، وترميم الجدران المتصدعة، وتجهيز المرافق الأساسية.',
-    canonical: 'https://bahjah.org.om/campaign/renovation/', // ← set to the real published URL
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImage: 'assets/img/og-renovation.jpg',
     ogImageAlt: 'صور قبل وبعد من أعمال الصيانة والترميم لجمعية بهجة العمانية للأيتام',
   },
@@ -184,7 +184,8 @@ export default {
         title: 'حملة ترميم 10 منازل أرامل وأيتام',
         text: 'أطلقت الجمعية خلال شهر رمضان (مارس 2026) حملة لترميم عشرة منازل لأسر الأيتام والأرامل، تشمل إصلاح الأسقف المتهالكة وترميم الجدران المتصدعة وتجهيز المرافق الأساسية كالمطابخ والحمامات.',
         note: 'حملة مؤرخة؛ للاستفسار عن حالتها تواصل مع الجمعية.',
-        link: 'https://bahjah.org.om/wp/%D8%AD%D9%85%D9%84%D8%A9-%D8%AA%D8%B1%D9%85%D9%8A%D9%85-10-%D9%85%D9%86%D8%A7%D8%B2%D9%84-%D8%A3%D8%B1%D8%A7%D9%85%D9%84-%D9%88%D8%A3%D9%8A%D8%AA%D8%A7%D9%85/',
+        linkArchived: true,
+        link: 'https://web.archive.org/web/20260510045208/https://bahjah.org.om/wp/%D8%AD%D9%85%D9%84%D8%A9-%D8%AA%D8%B1%D9%85%D9%8A%D9%85-10-%D9%85%D9%86%D8%A7%D8%B2%D9%84-%D8%A3%D8%B1%D8%A7%D9%85%D9%84-%D9%88%D8%A3%D9%8A%D8%AA%D8%A7%D9%85/',
         image: { src: 'assets/img/houses-maintenance-300.webp', width: 300, height: 300, alt: 'شعار مشروع ترميم وصيانة المنازل – جمعية بهجة' },
       },
       {
@@ -198,14 +199,16 @@ export default {
         date: 'من مشاريع الجمعية',
         title: 'مجمع بهجة السكني',
         text: 'مجمع سكني تجاري يوفر سكنًا للأيتام، ويتكوّن من أربعة مبانٍ وبه حديقة ومساحات خارجية.',
-        link: 'https://bahjah.org.om/wp/%D9%85%D8%AC%D9%85%D8%B9-%D8%A8%D9%87%D8%AC%D8%A9-%D8%A7%D9%84%D9%88%D9%82%D9%81%D9%8A/',
+        linkArchived: true,
+        link: 'https://web.archive.org/web/20260416182845/https://bahjah.org.om/wp/%D9%85%D8%AC%D9%85%D8%B9-%D8%A8%D9%87%D8%AC%D8%A9-%D8%A7%D9%84%D9%88%D9%82%D9%81%D9%8A/',
         image: { src: 'assets/img/residential-complex-218.webp', width: 218, height: 224, alt: 'شعار مجمع بهجة السكني' },
       },
       {
         date: 'هدف 2040',
         title: 'إدارة المباني الخيرية',
         text: 'تهدف الجمعية إلى إنجاز 10 مبانٍ خيرية بحلول عام 2040 لضمان دخل مستدام، وقد أنجزت المبنى الأول بحمد الله.',
-        link: 'https://bahjah.org.om/wp/%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D9%86%D9%8A-%D8%A7%D9%84%D8%AE%D9%8A%D8%B1%D9%8A%D8%A9/',
+        linkArchived: true,
+        link: 'https://web.archive.org/web/20260416171725/https://bahjah.org.om/wp/%D8%A7%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D9%86%D9%8A-%D8%A7%D9%84%D8%AE%D9%8A%D8%B1%D9%8A%D8%A9/',
         image: { src: 'assets/img/charity-buildings-240.webp', width: 240, height: 240, alt: 'شعار إدارة المباني الخيرية – جمعية بهجة' },
       },
     ],

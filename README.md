@@ -24,6 +24,24 @@ hero with an interactive **before/after slider** using Bahjah's real renovation 
 
 **Image resolution:** the only official before/after photos are the six small side-by-side images in the CV PDF (each half ≈ 210×158 px), so they look soft at large sizes. Ask Bahjah for the original photos and drop them into `assets/img/compare/` with the same names.
 
+## Pages
+
+| Page | Arabic | English | Template | Donation route |
+|---|---|---|---|---|
+| Building & renovation (default) | `/`, `/renovation/` | `/en/`, `/en/renovation/` | `src/template.mjs` | Official «بناء وترميم» product |
+| Bahjah Waqf (وقف بهجة) | `/waqf/` | `/en/waqf/` | `src/waqf.mjs` | WhatsApp lead + bank transfer (`payment.mode: 'contact'`) |
+| Hardship relief / Kaffarat (examples) | `/hardship-relief/`, `/kaffarat/` | – | `src/template.mjs` | Official products |
+
+All pages share `src/shared.mjs` (head, header with language switch, footer, consent, UI strings). A campaign picks its template with `template: 'waqf'`.
+
+**Published address:** `campaigns/_site.mjs` → `SITE_URL`. Canonical, hreflang and og:url/og:image are built from it, so change this one value when moving to a custom domain.
+
+### Waqf page
+- **Why WhatsApp:** Bahjah's store has **no waqf product** (checked via the WooCommerce Store API, Oct 2026), and the homepage's own «صدقة جارية» block only links to the general donations hub. Until a waqf product exists, the amount picker (10/25/50/100/other) pre-fills a WhatsApp message to Bahjah, e.g. «أرغب بالمساهمة في وقف بهجة بمبلغ 50 ر.ع.», with bank-transfer details beside it. **Bahjah's team must be ready to handle these messages.**
+- **Switching to a store product:** when Bahjah creates a «وقف بهجة» product, set `payment.mode: 'product'` and `payment.url` in `campaigns/waqf.mjs`; the buttons then link straight to it.
+- **Tracking:** a WhatsApp donate click fires `lead_click` (Meta `Lead`, GA4 `generate_lead`, plus a Google Ads conversion if `googleAdsLeadLabel` is set in `_tracking.mjs`) with the chosen amount as value. Amount changes fire `select_amount`.
+- **Sources:** the waqf facts come from the official profile PDF (p.10 long-term plan, p.19 charity buildings, the waqf statement and the Waqf Complex), the homepage, and project pages archived 16/4/2026 (they're currently missing from the live site after a rollback).
+
 ## Languages
 
 Every page has an **Arabic ⇄ English toggle** in the header. English pages live at `/en/` (default campaign) and `/en/<slug>/`, built from `campaigns/en/<slug>.mjs`. That file reuses the Arabic config's links, images and settings and overrides only the text. The toggle keeps UTMs and click IDs, and fires a `language_switch` event. Interface strings are in the `STR` dictionary in `src/template.mjs`. A campaign without an English file simply shows no toggle. The payment page itself is Arabic-only, so the English page names the Arabic labels donors will see (بناء وترميم, الكمية, تبرع الان).

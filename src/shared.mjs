@@ -24,6 +24,12 @@ export const icons = {
   check: '<path d="m5 12 5 5 9-10"/>',
   award: '<circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 7 5-3 5 3-1.5-7"/>',
   handle: '<path d="m9 7-5 5 5 5M15 7l5 5-5 5"/>',
+  hand: '<path d="M4 14h3l4 2h4a2 2 0 0 0 0-4h-3"/><path d="M7 14v6M7 20h8l6-4a2 2 0 0 0-2.4-3.2L15 15"/><path d="M14 8.5c0-1.4 1.1-2.5 2.5-2.5S19 7.1 19 8.5c0 2-2.5 3.5-2.5 3.5S14 10.5 14 8.5z"/>',
+  building: '<path d="M4 21V5l8-2v18M12 8l8 2v11M3 21h18"/><path d="M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
+  seed: '<path d="M12 21v-9"/><path d="M12 12C12 8 9 5 4 5c0 4 3 7 8 7zM12 14c0-3.5 2.5-6 7-6 0 3.5-2.5 6-7 6z"/>',
+  family: '<circle cx="8" cy="6" r="2.5"/><circle cx="16.5" cy="8.5" r="2"/><path d="M3.5 20v-3.5A4.5 4.5 0 0 1 8 12a4.5 4.5 0 0 1 4.5 4.5V20M13 20v-2.5a3.5 3.5 0 0 1 7 0V20"/>',
+  heart: '<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.4 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+  whatsapp: '<path d="M4 20l1.3-3.9A8 8 0 1 1 8 18.8z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-1.9-1-1 .8a3.5 3.5 0 0 1-2.2-2.2l.8-1-1-1.9z"/>',
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/>',
   quote: '<path fill="currentColor" stroke="none" d="M9.6 6C6.5 6.3 4 9 4 12.3V18h6.2v-6.2H7.1c0-2.2 1.2-3.6 2.9-3.9zM19.6 6c-3.1.3-5.6 3-5.6 6.3V18h6.2v-6.2h-3.1c0-2.2 1.2-3.6 2.9-3.9z"/>',
 };
@@ -49,7 +55,7 @@ export const STR = {
     kProcess: 'من مساهمتك إلى المنزل', kEvidence: 'سجلّ موثّق', kGive: 'طريقة المساهمة',
     kOther: 'طرق أخرى', kWhy: 'لماذا بهجة؟', kFaq: 'أسئلة شائعة',
     more: (n) => `عرض ${n} صور أخرى`, viewProfile: 'عرض الملف التعريفي', source: 'المصدر: ',
-    evSource: 'المصدر على موقع الجمعية',
+    evSource: 'المصدر على موقع الجمعية', evSourceArchived: 'المصدر (نسخة مؤرشفة من موقع الجمعية)',
     step1: (cta) => `اضغط «${cta}».`,
     step2: (label, unit) => `في صفحة «${label}» الرسمية، ${unit ? 'اكتب المبلغ في خانة «الكمية»' : 'حدّد المبلغ'} ثم اضغط «تبرع الآن».`,
     step3: 'أكمل الدفع بالبطاقة عبر بوابة بنك مسقط SmartPay.',
@@ -83,7 +89,7 @@ export const STR = {
     kProcess: 'From your gift to the home', kEvidence: 'Documented record', kGive: 'How to give',
     kOther: 'More options', kWhy: 'Why Bahjah?', kFaq: 'FAQ',
     more: (n) => `Show ${n} more photos`, viewProfile: 'View the profile', source: 'Source: ',
-    evSource: "Source on Bahjah's website",
+    evSource: "Source on Bahjah's website", evSourceArchived: "Source (archived copy of Bahjah's website)",
     step1: (cta) => `Tap “${cta}”.`,
     step2: (label, unit, labelAr) => `On the official “${labelAr || label}” (${label}) page, ${unit ? 'enter your amount in the “الكمية” (Quantity) field' : 'choose the amount'}, then tap “تبرع الان” (Donate now).`,
     step3: 'Complete payment by card through the Bank Muscat SmartPay gateway.',
@@ -153,7 +159,7 @@ export function baseLd(c, ctx) {
 
 // ── Page shell ────────────────────────────────────────────────────────────
 // headerCta / stickyCta: { href, attrs, label }   main: the <main> element
-export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main, bodyClass = '' }) {
+export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main, bodyClass = '', extraFonts = '' }) {
   const { lang, t, dir, orgName, alt, o, a, src } = ctx;
   return `<!doctype html>
 <html lang="${lang}" dir="${dir}">
@@ -182,7 +188,7 @@ ${alt ? `<link rel="alternate" hreflang="${lang}" href="${esc(c.seo.canonical)}"
 <link rel="icon" href="${a('assets/img/logo-96.webp')}" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700${extraFonts}&display=swap">
 ${preload}
 <link rel="stylesheet" href="${a('assets/styles.css')}">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>

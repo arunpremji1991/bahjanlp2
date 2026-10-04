@@ -18,7 +18,7 @@ export default {
     title: 'فك كربة أسر الأيتام | جمعية بهجة العمانية للأيتام',
     description:
       'ساهم عبر الموقع الرسمي لجمعية بهجة العمانية للأيتام في «فك كربة»: عون مادي سريع لأسر الأيتام في الظروف الطارئة، بعد دراسة كل حالة على حدة.',
-    canonical: 'https://bahjah.org.om/campaign/hardship-relief/',
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImage: 'assets/img/og-renovation.jpg', // ← replace with a campaign-specific official image
     ogImageAlt: 'جمعية بهجة العمانية للأيتام',
   },

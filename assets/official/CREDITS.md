@@ -17,6 +17,11 @@ Retrieved 28 Sep 2026 from Internet Archive captures of bahjah.org.om (Feb–Jun
 | `aid-department-240/480.webp` | `…/2026/02/Gr4444oup-2-1024x990.png` (قسم المساعدات) | hardship-relief evidence |
 | `hardship-626.webp` | `…/2025/08/فك-كربة.jpeg` (official image of the فك كربة donation product) | hardship-relief hero |
 | `award-*.webp` | Homepage section "شهادات وجوائز حصلت عليها الجمعية": `…/2025/08/جائزه_السلطان_قابوس_للعمل_التطوعي-1-1024x1024.png`, `7b28eb1a-….png`, `ohrclogo.png`, `OQ-Logo.png`, `Screenshot-2025-08-27-at-6.24.15-PM.png`, `c18dccd0a3dc546592ee909b93f8f3bb.png` | "Why Bahjah" |
+| `award-iso-160.webp` | `…/2025/08/what-is-iso-9001-compliance.webp` (homepage awards) | all pages |
+| `waqf/seedling-254/508.webp` | `…/2025/08/waqf-home-bg-1.png`, the image of the homepage's «ابهج العالم بعطائك – صدقة جارية» block | waqf hero |
+| `waqf/charity-buildings`, `waqf-complex`, `industrial`, `agri`, `hall` | Project logos from bahjah.org.om projects section (`…/2026/02/v45we.jpg`, `Screenshot-2026-02-08-at-12.37.55-AM.png`, `Geeeeeeeeeeeee-3-1024x972.png`, `ny65r5.jpg`, `v45e3.jpg`) | waqf projects |
+| `waqf/sadaqa-640/1024.webp` | `…/2025/08/الصدقة.jpeg`, the official image of the «صدقة» donation product | waqf final CTA background |
+| `og-waqf.jpg` | Composite of the seedling image + logo (both above) | waqf social share image |
 | `og-renovation.jpg` | Composite of before/after photo #5 + logo (both above) | social share image |
 | `campaign-10-homes.jpeg` (src only, **not shown on the page**) | `…/2026/03/IMG_0515.jpeg`, official poster "حملة ترميم 10 منازل أرامل وأيتام – تحديث 3 – 18/3/2026" | Reference: campaign wording, donation channels, and the QR code confirming the payment URL |
 

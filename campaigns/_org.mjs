@@ -22,7 +22,7 @@ export const org = {
 
   // شهادات وجوائز حصلت عليها الجمعية (homepage, wording preserved)
   awards: {
-    iso:          { title: 'شهادة الأيزو', year: '2023', img: null },
+    iso:          { title: 'شهادة الأيزو', year: '2023', img: 'assets/img/award-iso-160.webp' },
     sultanQaboos: { title: 'جائزة السلطان قابوس للعمل التطوعي', year: '2013', img: 'assets/img/award-sultan-qaboos-160.webp' },
     sanabel:      { title: 'جائزة السنابل للتميز الخدمي بدول مجلس التعاون الخليجي', year: '2016', img: 'assets/img/award-sanabel-160.webp' },
     ohrc:         { title: 'كُرّمت كأفضل جمعية من لجنة حقوق الإنسان', year: '2019', img: 'assets/img/award-ohrc-160.webp' },

@@ -30,7 +30,7 @@ export default {
     title: 'وقف بهجة | صدقة جارية للأيتام في عُمان – جمعية بهجة العمانية للأيتام',
     description:
       'ساهم في وقف بهجة: صدقة جارية يدوم نفعها. أوقاف جمعية بهجة العمانية للأيتام يعود ريعها للجمعية ومشاريعها لخدمة الأيتام، ومنها المباني الخيرية ومجمع بهجة الوقفي.',
-    canonical: 'https://bahjah.org.om/campaign/waqf/', // ← set to the real published URL
+    canonical: '', // set at build time from campaigns/_site.mjs
     ogImage: 'assets/img/og-waqf.jpg',
     ogImageAlt: 'وقف بهجة – صدقة جارية للأيتام',
   },
