@@ -72,7 +72,7 @@ export const STR = {
     consentAria: 'ملفات تعريف الارتباط', consent: 'نستخدم ملفات تعريف الارتباط لقياس أداء حملاتنا الإعلانية وتحسينها.',
     accept: 'موافق', decline: 'رفض',
     langLabel: 'English', langShort: 'EN', langAria: 'Switch to English', langCode: 'en',
-    whatsappAria: 'تواصل عبر واتساب', officialSite: 'الموقع الرسمي', privacy: 'سياسة الخصوصية', sourcesTitle: 'مصادر المحتوى والصور', faqKicker: 'الأسئلة الشائعة',
+    whatsappAria: 'تواصل عبر واتساب', navAria: 'أقسام الصفحة', officialSite: 'الموقع الرسمي', privacy: 'سياسة الخصوصية', sourcesTitle: 'مصادر المحتوى والصور', faqKicker: 'الأسئلة الشائعة',
     city: 'صلالة', region: 'ظفار', locale: 'ar_OM',
   },
   en: {
@@ -107,7 +107,7 @@ export const STR = {
     consentAria: 'Cookies', consent: 'We use cookies to measure and improve our advertising campaigns.',
     accept: 'Accept', decline: 'Decline',
     langLabel: 'العربية', langShort: 'عربي', langAria: 'التبديل إلى العربية', langCode: 'ar',
-    whatsappAria: 'Contact us on WhatsApp', officialSite: 'Official website (Arabic)', privacy: 'Privacy policy', sourcesTitle: 'Content and image sources', faqKicker: 'FAQ',
+    whatsappAria: 'Contact us on WhatsApp', navAria: 'Page sections', officialSite: 'Official website (Arabic)', privacy: 'Privacy policy', sourcesTitle: 'Content and image sources', faqKicker: 'FAQ',
     city: 'Salalah', region: 'Dhofar', locale: 'en_US',
   },
 };
@@ -242,6 +242,7 @@ export function finalSection(ctx, { title, text, cta, bg }) {
 // headerCta / stickyCta: { href, attrs, label }; stickyCta.price: { value, note } (optional)
 // c.sources: list shown in the footer «مصادر المحتوى والصور»; c.disclaimer: footer note
 export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main }) {
+  // c.nav: [{ href: '#section', label }] → header section menu (desktop)
   const { lang, t, dir, orgName, alt, o, a } = ctx;
   const sh = o.shared;
   const tel = (n) => `<a href="tel:+968${n}" data-contact="phone_footer" dir="ltr">${lang === 'en' ? `+968 ${n.slice(0, 4)} ${n.slice(4)}` : n}</a>`;
@@ -290,6 +291,9 @@ ${SPRITE}
       <img src="${a('assets/img/shared/bahjah-logo.webp')}" alt="${t.logo}${esc(orgName)}" width="36" height="40">
       <span class="brand-name">${esc(orgName)}</span>
     </a>
+    ${c.nav && c.nav.length ? `<nav class="header-nav" aria-label="${t.navAria}">
+      ${c.nav.map((n) => `<a href="${esc(n.href)}" data-nav="${esc(n.href.slice(1))}">${esc(n.label)}</a>`).join('\n      ')}
+    </nav>` : ''}
     <div class="header-actions">
       ${alt ? `<a class="lang-btn" href="${esc(alt.href)}" hreflang="${t.langCode}" lang="${t.langCode}" aria-label="${t.langAria}" data-lang-switch="${t.langCode}">${use('globe')}${t.langShort}</a>` : ''}
       <a class="icon-btn" href="https://wa.me/${esc(o.contact.whatsapp)}" target="_blank" rel="noopener" aria-label="${t.whatsappAria}" data-contact="whatsapp_header">${use('whatsapp')}</a>

@@ -310,6 +310,20 @@ svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-wi
 .row { display: flex; flex-wrap: wrap; gap: 8px; }
 .section-head .lead { font: 600 19px/1.7 var(--f-display); color: var(--teal-900); margin: 8px 0 10px; }
 
+/* Header section menu (same component as the zakat/kaffarat landing page):
+   hidden on mobile, centred pill links on desktop. */
+.header-nav { display: none; align-items: center; gap: 4px; }
+.header-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 999px; color: var(--ink-2); text-decoration: none; font: 600 15px/1 var(--f-body); white-space: nowrap; transition: color .2s, background .2s; }
+.header-nav a:hover, .header-nav a.is-current { color: var(--teal-900); background: var(--teal-50); }
+.header-cta, .brand-name { white-space: nowrap; }
+@media (min-width: 960px) {
+  .header-nav { display: flex; margin-inline: auto; }
+}
+@media (min-width: 960px) and (max-width: 1179px) {
+  .site-header .brand-name { display: none; }
+  .header-nav a { padding: 0 9px; font-size: 14.5px; }
+}
+
 /* Header: brand + icons sit on one line */
 .lang-btn svg, .icon-btn svg { width: 20px; height: 20px; }
 

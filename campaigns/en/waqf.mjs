@@ -165,4 +165,10 @@ export default {
     'bahjah.org.om/wp/المركز-الاعلامي/ — news',
   ],
   disclaimer: "This landing page directs visitors to the Society's official contact and donation channels. It does not process payments or store financial data.",
+  nav: [
+    { href: '#about-waqf', label: 'What is waqf?' },
+    { href: '#projects', label: 'Waqf projects' },
+    { href: '#corporate', label: 'For companies' },
+    { href: '#faq', label: 'FAQ' },
+  ],
 };

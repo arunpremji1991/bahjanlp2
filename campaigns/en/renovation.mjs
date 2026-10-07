@@ -205,4 +205,10 @@ export default {
   ],
   disclaimer: "This landing page directs visitors to the Society's official donation page. It does not process payments or store financial data.",
   sticky: { value: '1 OMR', note: 'minimum gift' },
+  nav: [
+    { href: '#covers', label: 'What you support' },
+    { href: '#impact', label: 'Before & after' },
+    { href: '#trust', label: 'Why Bahjah' },
+    { href: '#faq', label: 'FAQ' },
+  ],
 };

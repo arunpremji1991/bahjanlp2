@@ -460,6 +460,21 @@
     var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 8); };
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
+  // Header menu: mark the link of the section currently in view.
+  var navLinks = document.querySelectorAll('.header-nav a[data-nav]');
+  if (navLinks.length && 'IntersectionObserver' in window) {
+    var byId = {};
+    navLinks.forEach(function (a) { byId[a.getAttribute('data-nav')] = a; });
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        navLinks.forEach(function (a) { a.classList.remove('is-current'); a.removeAttribute('aria-current'); });
+        var l = byId[e.target.id]; if (l) { l.classList.add('is-current'); l.setAttribute('aria-current', 'true'); }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    Object.keys(byId).forEach(function (id) { var el = document.getElementById(id); if (el) spy.observe(el); });
+  }
+
   // Reveal-on-scroll for elements marked .reveal (hidden by CSS only when <html> has .js).
   var reveals = document.querySelectorAll('.reveal');
   if (!reduceMotion && 'IntersectionObserver' in window) {
