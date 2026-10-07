@@ -48,7 +48,10 @@ export default {
   hero: {
     ...ar.hero,
     eyebrow: "Building & renovating orphans' homes",
-    title: 'A safe home for an orphan family starts with you',
+    title: 'A safe home for an orphan family',
+    titleAccent: 'starts with you',
+    note: 'A charity since 2014 · ISO certified 2023',
+    priceTag: { value: '1', text: 'OMR is enough to start: "Give, even if only one rial"' },
     need: "The Omani Bahjah Orphan Society is committed to providing safe, sound housing, so it maintains and renovates orphans' damaged homes.",
     needSource: "Bahjah's official profile",
     supporting:
@@ -190,4 +193,16 @@ export default {
     title: 'Help give an orphan family a safe home',
     text: 'Whatever the amount, your gift goes to the "Building & Renovation" fund for orphans\' homes at the Omani Bahjah Orphan Society.',
   },
+
+  faqTitle: 'Questions about the renovation campaign',
+  sources: [
+    'bahjah.org.om/wp/ — about, founding date, awards, contact details',
+    'bahjah.org.om/wp/product/بناء-و-ترميم/ — the "Building & Renovation" donation page and unit value',
+    'bahjah.org.om/wp/الاسئلة-الشائعة/ — payment methods (Bank Muscat SmartPay)',
+    'bahjah.org.om/wp/المركز-الاعلامي/ — news',
+    "Society profile (CV-Print-Proof.pdf) — maintenance & renovation work, before/after photos, 2023 statistics, activity photos",
+    "Bahjah's announcement of the campaign to renovate 10 homes of widows and orphans (March 2026) — campaign items and other donation channels",
+  ],
+  disclaimer: "This landing page directs visitors to the Society's official donation page. It does not process payments or store financial data.",
+  sticky: { value: '1 OMR', note: 'minimum gift' },
 };

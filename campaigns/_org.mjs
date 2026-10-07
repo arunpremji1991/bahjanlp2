@@ -89,3 +89,88 @@ export const orgEn = {
     source: "Bahjah's official renovation campaign announcement (March 2026)",
   },
 };
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SHARED SECTIONS (identical on all Bahjah landing pages: renovation, waqf and
+// orphan sponsorship). Wording matches the sponsorship landing page.
+// ═══════════════════════════════════════════════════════════════════════════
+const NEWS_JAZER = 'https://bahjah.org.om/wp/%d8%aa%d9%88%d9%82%d9%8a%d8%b9-%d8%a7%d8%aa%d9%81%d8%a7%d9%82%d9%8a%d8%a9-%d8%aa%d8%b9%d8%a7%d9%88%d9%86-%d9%84%d9%83%d9%81%d8%a7%d9%84%d8%a9-%d8%a7%d9%84%d8%a3%d9%8a%d8%aa%d8%a7%d9%85-%d8%a8%d9%8a/';
+const NEWS_SADAH = 'https://bahjah.org.om/wp/%d8%a5%d8%a8%d8%b1%d8%a7%d9%85-%d8%a7%d8%aa%d9%81%d8%a7%d9%82%d9%8a%d8%a9-%d8%aa%d8%b9%d8%a7%d9%88%d9%86-%d9%88%d8%b4%d8%b1%d8%a7%d9%83%d8%a9-%d8%a8%d9%8a%d9%86-%d8%a8%d9%87%d8%ac%d8%a9-%d8%a7%d9%84/';
+const AWARD_IMGS = [
+  { key: 'sultanQaboos', src: 'assets/img/shared/awards/qaboos.webp', w: 64, h: 64 },
+  { key: 'iso', src: 'assets/img/shared/awards/iso.webp', w: 64, h: 64 },
+  { key: 'kuwait', src: 'assets/img/shared/awards/alissa.webp', w: 64, h: 64 },
+  { key: 'bahrain', src: 'assets/img/shared/awards/salam.webp', w: 64, h: 47 },
+  { key: 'oq', src: 'assets/img/shared/awards/oq.webp', w: 64, h: 40 },
+  { key: 'ohrc', src: 'assets/img/shared/awards/ohrc.webp', w: 64, h: 58 },
+  { key: 'sanabel', src: 'assets/img/shared/awards/sanabel.webp', w: 64, h: 64 },
+];
+const GALLERY = [
+  { src: 'assets/img/shared/program-education.webp', w: 689, h: 382 },
+  { src: 'assets/img/shared/program-aid-supplies.webp', w: 346, h: 201 },
+  { src: 'assets/img/shared/photo-signing.webp', w: 691, h: 384 },
+];
+
+org.shared = {
+  trust: {
+    kicker: 'لماذا بهجة؟',
+    title: 'جمعية لرعاية الأيتام في عُمان منذ 2014',
+    text: 'جمعية خيرية غير حكومية تأسست بالمرسوم السلطاني رقم 14/2000، ترعى الأيتام داخل منازلهم وخارجها.',
+    facts: [
+      { icon: 'calendar', value: '2014', label: 'سنة التأسيس' },
+      { icon: 'users', value: '1,361', label: 'يتيماً مسجّلاً', note: '2023' }, // CV "Statistics - 2023: Registered orphans 1361"
+      { icon: 'shield', value: 'ISO', label: 'شهادة الأيزو', note: '2023' },
+      { icon: 'award', value: '7', label: 'جوائز وتكريمات', note: '2013 – 2024' },
+    ],
+    awards: AWARD_IMGS.map((x) => ({ ...x, alt: `${org.awards[x.key].title} ${org.awards[x.key].year}` })),
+    awardsAria: 'جوائز وشهادات الجمعية',
+    note: 'عدد الأيتام رقمٌ تاريخي من ملف الجمعية التعريفي (إحصائيات 2023)، والجوائز كما تعرضها الجمعية على موقعها مع سنواتها.',
+  },
+  news: {
+    kicker: 'بهجة على أرض الواقع',
+    title: 'أنشطة وشراكات تخدم الأيتام',
+    galleryAria: 'صور من أنشطة الجمعية',
+    gallery: [
+      { ...GALLERY[0], alt: 'طلاب مدارس في إحدى فعاليات جمعية بهجة', caption: 'فعالية تعليمية للأطفال' },
+      { ...GALLERY[1], alt: 'مساعدات عينية أمام مبنى جمعية بهجة العمانية للأيتام', caption: 'مساعدات عينية أمام مقر الجمعية' },
+      { ...GALLERY[2], alt: 'توقيع اتفاقية تمويل جمعيات أهلية', caption: 'توقيع اتفاقيات تمويل — مارس 2021' },
+    ],
+    links: [
+      { href: NEWS_JAZER, date: '2026-02-04', dateLabel: '4 فبراير 2026', title: 'اتفاقية تعاون لكفالة الأيتام مع والي ولاية الجازر', id: 'news_jazer' },
+      { href: NEWS_SADAH, date: '2026-02-11', dateLabel: '11 فبراير 2026', title: 'اتفاقية تعاون وشراكة بين بهجة وولاية سدح', id: 'news_sadah' },
+    ],
+  },
+  privacyUrl: 'https://bahjah.org.om/wp/%d8%b3%d9%8a%d8%a7%d8%b3%d8%a9-%d8%a7%d9%84%d8%ae%d8%b5%d9%88%d8%b5%d9%8a%d8%a9/',
+};
+
+orgEn.shared = {
+  trust: {
+    kicker: 'Why Bahjah?',
+    title: 'Orphan care in Oman since 2014',
+    text: 'A non-governmental charity established under Royal Decree No. 14/2000, caring for orphans inside and outside their homes.',
+    facts: [
+      { icon: 'calendar', value: '2014', label: 'Year established' },
+      { icon: 'users', value: '1,361', label: 'Registered orphans', note: '2023' },
+      { icon: 'shield', value: 'ISO', label: 'Certified', note: '2023' },
+      { icon: 'award', value: '7', label: 'Awards & honours', note: '2013 – 2024' },
+    ],
+    awards: AWARD_IMGS.map((x) => ({ ...x, alt: `${orgEn.awards[x.key].title}, ${orgEn.awards[x.key].year}` })),
+    awardsAria: "The Society's awards and certificates",
+    note: "The orphan count is a historical figure from the Society's published profile (2023 statistics); awards are as displayed on the Society's website, with their years.",
+  },
+  news: {
+    kicker: 'Bahjah on the ground',
+    title: 'Activities and partnerships serving orphans',
+    galleryAria: "Photos from the Society's activities",
+    gallery: [
+      { ...GALLERY[0], alt: 'School students at a Bahjah Society event', caption: 'An educational event for children' },
+      { ...GALLERY[1], alt: 'In-kind aid outside the Omani Bahjah Orphan Society building', caption: "In-kind aid outside the Society's headquarters" },
+      { ...GALLERY[2], alt: 'Signing of funding agreements for civil associations', caption: 'Signing funding agreements — March 2021' },
+    ],
+    links: [
+      { href: NEWS_JAZER, date: '2026-02-04', dateLabel: '4 February 2026', title: 'Cooperation agreement for orphan sponsorship with the Wali of Al Jazer (Arabic)', id: 'news_jazer' },
+      { href: NEWS_SADAH, date: '2026-02-11', dateLabel: '11 February 2026', title: 'Cooperation and partnership agreement between Bahjah and the Wilayat of Sadah (Arabic)', id: 'news_sadah' },
+    ],
+  },
+  privacyUrl: org.shared.privacyUrl,
+};

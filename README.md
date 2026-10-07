@@ -24,6 +24,15 @@ hero with an interactive **before/after slider** using Bahjah's real renovation 
 
 **Image resolution:** the only official before/after photos are the six small side-by-side images in the CV PDF (each half ≈ 210×158 px), so they look soft at large sizes. Ask Bahjah for the original photos and drop them into `assets/img/compare/` with the same names.
 
+## One design system for all Bahjah landing pages
+
+All three landing pages (orphan sponsorship, renovation, waqf) share **one look and feel**. `src/styles.css` starts with the exact stylesheet of the orphan-sponsorship page (v3, Oct 2026): teal and gold tokens, Alexandria and IBM Plex Sans Arabic, the header, hero, covers, steps, "Why Bahjah?", "Bahjah on the ground", FAQ, final CTA, footer and sticky bar. Campaign-specific widgets are appended below it using only those tokens. `src/sprite.svg` holds the same icon sprite. Only the content and the objective change from page to page.
+
+These shared sections are identical everywhere and come from `campaigns/_org.mjs` (`org.shared`, `orgEn.shared`):
+- **«لماذا بهجة؟ / Why Bahjah?»:** 2014, 1,361 registered orphans (CV, 2023 statistics), ISO 2023, 7 awards, plus the awards strip.
+- **«بهجة على أرض الواقع / Bahjah on the ground»:** three official activity photos and the latest partnership news.
+- **Footer:** address, phones, email, official site, privacy policy, language, «مصادر المحتوى والصور» (per page: `sources` in each campaign config) and a disclaimer (`disclaimer`).
+
 ## Pages
 
 | Page | Arabic | English | Template | Donation route |

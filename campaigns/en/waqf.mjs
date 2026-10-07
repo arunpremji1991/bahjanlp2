@@ -67,7 +67,9 @@ export default {
   hero: {
     ...ar.hero,
     eyebrow: 'Bahjah Waqf · Sadaqah Jariyah for orphans',
-    title: 'Make your giving an impact that never ends',
+    title: 'Make your giving',
+    titleAccent: 'an impact that never ends',
+    note: 'A charity since 2014 · ISO certified 2023',
     tagline: "Today's charity… its impact continues.",
     supporting: "Your gift doesn't only meet a moment's need; it helps build a sustainable source of income that serves orphans.",
     quote: { text: 'Ongoing charity whose benefit lasts and whose reward multiplies', cite: "From Bahjah's website (translated from Arabic)" },
@@ -153,4 +155,14 @@ export default {
     title: 'Make your charity an impact that never ends',
     text: "Today's charity… its impact continues.",
   },
+
+  faqTitle: 'Questions about Bahjah Waqf',
+  sources: [
+    "bahjah.org.om/wp/ — about, founding date, awards, contact details, the «ongoing charity» section and its image",
+    "Society profile (CV-Print-Proof.pdf) — long-term plan, charitable waqf buildings, Bahjah Waqf Complex, 2023 statistics, activity photos",
+    "Bahjah project pages (archived 16/4/2026) — Waqf Complex, charity buildings, industrial complex, Khairat Najd, Bahjah Hall",
+    'bahjah.org.om/wp/product/صدقة/ — charity (sadaqah) image',
+    'bahjah.org.om/wp/المركز-الاعلامي/ — news',
+  ],
+  disclaimer: "This landing page directs visitors to the Society's official contact and donation channels. It does not process payments or store financial data.",
 };

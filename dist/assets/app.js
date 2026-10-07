@@ -247,6 +247,8 @@
       var href = 'https://wa.me/' + LP.lead.whatsapp + '?text=' + encodeURIComponent(msg);
       leadLinks.forEach(function (a) { a.href = href; });
       if (wSummary) wSummary.textContent = selectedAmount ? v + ' ' + (I.cur || '') : '—';
+      var sv = document.querySelector('[data-sticky-value]');
+      if (sv) sv.textContent = selectedAmount ? v + ' ' + (I.cur || '') : '—';
     };
     var wSync = function (fromUser) {
       var r = wAmounts.querySelector('input:checked');
@@ -458,15 +460,14 @@
     var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 8); };
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
+  // Reveal-on-scroll for elements marked .reveal (hidden by CSS only when <html> has .js).
+  var reveals = document.querySelectorAll('.reveal');
   if (!reduceMotion && 'IntersectionObserver' in window) {
-    var targets = document.querySelectorAll('.sec-head, .work, .impact-card, .step, .ev, .fact, .award, .way, .give-card, .quote-card, .final-in, .w-flow-step, .w-card, .w-stat, .w-proj, .w-give-card, .w-corp-box');
     var ro = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
-    targets.forEach(function (t, i) {
-      t.classList.add('reveal');
-      t.style.transitionDelay = (i % 6) * 60 + 'ms';
-      ro.observe(t);
-    });
+    reveals.forEach(function (el) { ro.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
   }
 })();

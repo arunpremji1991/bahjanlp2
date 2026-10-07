@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 // Shared building blocks for every landing-page template: escaping, icons,
 // UI strings (ar/en), page context, JSON-LD and the page shell (head, header
 // with language switch, footer, sticky CTA, consent banner).
@@ -70,7 +71,8 @@ export const STR = {
     official: 'الموقع الرسمي', allDon: 'كل أبواب التبرع',
     consentAria: 'ملفات تعريف الارتباط', consent: 'نستخدم ملفات تعريف الارتباط لقياس أداء حملاتنا الإعلانية وتحسينها.',
     accept: 'موافق', decline: 'رفض',
-    langLabel: 'English', langAria: 'Switch to English', langCode: 'en',
+    langLabel: 'English', langShort: 'EN', langAria: 'Switch to English', langCode: 'en',
+    whatsappAria: 'تواصل عبر واتساب', officialSite: 'الموقع الرسمي', privacy: 'سياسة الخصوصية', sourcesTitle: 'مصادر المحتوى والصور', faqKicker: 'الأسئلة الشائعة',
     city: 'صلالة', region: 'ظفار', locale: 'ar_OM',
   },
   en: {
@@ -104,7 +106,8 @@ export const STR = {
     official: 'Official website', allDon: 'All donation options',
     consentAria: 'Cookies', consent: 'We use cookies to measure and improve our advertising campaigns.',
     accept: 'Accept', decline: 'Decline',
-    langLabel: 'العربية', langAria: 'التبديل إلى العربية', langCode: 'ar',
+    langLabel: 'العربية', langShort: 'عربي', langAria: 'التبديل إلى العربية', langCode: 'ar',
+    whatsappAria: 'Contact us on WhatsApp', officialSite: 'Official website (Arabic)', privacy: 'Privacy policy', sourcesTitle: 'Content and image sources', faqKicker: 'FAQ',
     city: 'Salalah', region: 'Dhofar', locale: 'en_US',
   },
 };
@@ -157,10 +160,91 @@ export function baseLd(c, ctx) {
   ];
 }
 
+// ── Shared icon sprite (same file/ids as the orphan-sponsorship landing page) ──
+const SPRITE = readFileSync(new URL('./sprite.svg', import.meta.url), 'utf8');
+export const use = (id, cls = '') => `<svg${cls ? ` class="${cls}"` : ''} aria-hidden="true"><use href="#i-${id}"/></svg>`;
+
+export const sectionHead = ({ kicker, title, text, id, lead }) => `<div class="section-head reveal">
+        ${kicker ? `<span class="kicker">${esc(kicker)}</span>` : ''}
+        <h2${id ? ` id="${id}"` : ''}>${esc(title)}</h2>
+        ${lead ? `<p class="lead">${esc(lead)}</p>` : ''}
+        ${text ? `<p>${esc(text)}</p>` : ''}
+      </div>`;
+
+// ── Shared sections (identical on every Bahjah landing page) ─────────────────
+export function trustSection(ctx) {
+  const { a } = ctx;
+  const T = ctx.o.shared.trust;
+  return `<section class="section section-sand" id="trust" aria-labelledby="trust-title" data-section="trust">
+  <div class="wrap">
+    <div class="why-grid">
+      ${sectionHead({ kicker: T.kicker, title: T.title, text: T.text, id: 'trust-title' })}
+      <ul class="facts reveal">
+        ${T.facts.map((f) => `<li class="fact">${use(f.icon, 'fact-ico')}<b>${esc(f.value)}</b><span>${esc(f.label)}</span>${f.note ? `<small>${esc(f.note)}</small>` : ''}</li>`).join('\n        ')}
+      </ul>
+    </div>
+    <ul class="awards reveal" aria-label="${esc(T.awardsAria)}">
+      ${T.awards.map((w) => `<li><img src="${a(w.src)}" alt="${esc(w.alt)}" title="${esc(w.alt)}" width="${w.w}" height="${w.h}" loading="lazy"></li>`).join('\n      ')}
+    </ul>
+    <p class="awards-note">${esc(T.note)}</p>
+  </div>
+</section>`;
+}
+
+export function newsSection(ctx) {
+  const { a } = ctx;
+  const N = ctx.o.shared.news;
+  return `<section class="section" id="news" aria-labelledby="news-title" data-section="news">
+  <div class="wrap">
+    ${sectionHead({ kicker: N.kicker, title: N.title, id: 'news-title' })}
+    <ul class="gallery reveal" aria-label="${esc(N.galleryAria)}">
+      ${N.gallery.map((g) => `<li><figure><img src="${a(g.src)}" alt="${esc(g.alt)}" width="${g.w}" height="${g.h}" loading="lazy"><figcaption>${esc(g.caption)}</figcaption></figure></li>`).join('\n      ')}
+    </ul>
+    <ul class="news-links reveal">
+      ${N.links.map((l) => `<li><a href="${esc(l.href)}" target="_blank" rel="noopener" data-outbound="${esc(l.id)}"><span><time datetime="${l.date}">${esc(l.dateLabel)}</time><b>${esc(l.title)}</b></span>${use('chev', 'flip')}</a></li>`).join('\n      ')}
+    </ul>
+  </div>
+</section>`;
+}
+
+export function faqSection(ctx, faq, { kicker, title }) {
+  return `<section class="section section-sand" id="faq" aria-labelledby="faq-title" data-section="faq">
+  <div class="wrap">
+    ${sectionHead({ kicker, title, id: 'faq-title' })}
+    <div class="faq">
+      ${faq.map((f) => `<details>
+        <summary>${esc(f.q)}</summary>
+        <div><p>${esc(ctx.fillOrg(f.a))}</p></div>
+      </details>`).join('\n      ')}
+    </div>
+  </div>
+</section>`;
+}
+
+// Final CTA: bg image + title + one button + contact row (WhatsApp, phone)
+export function finalSection(ctx, { title, text, cta, bg }) {
+  const { a, t, o } = ctx;
+  return `<section class="final" id="final" aria-labelledby="final-title" data-section="final">
+  <div class="final-bg" aria-hidden="true"><img src="${a(bg.src)}" alt="" width="${bg.w}" height="${bg.h}" loading="lazy"></div>
+  <div class="wrap final-inner reveal">
+    <h2 id="final-title">${esc(title)}</h2>
+    <p>${esc(text)}</p>
+    <div class="cta-block" id="cta-final">${cta}</div>
+    <div class="final-contact">
+      <a href="https://wa.me/${esc(o.contact.whatsapp)}" target="_blank" rel="noopener" data-contact="whatsapp_final">${use('whatsapp')} ${t.whatsapp}</a>
+      <a href="tel:+968${esc(o.contact.phones[0])}" data-contact="phone_final">${use('phone')} <span dir="ltr">${esc(o.contact.phones[0])}</span></a>
+    </div>
+  </div>
+</section>`;
+}
+
 // ── Page shell ────────────────────────────────────────────────────────────
-// headerCta / stickyCta: { href, attrs, label }   main: the <main> element
-export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main, bodyClass = '', extraFonts = '' }) {
-  const { lang, t, dir, orgName, alt, o, a, src } = ctx;
+// headerCta / stickyCta: { href, attrs, label }; stickyCta.price: { value, note } (optional)
+// c.sources: list shown in the footer «مصادر المحتوى والصور»; c.disclaimer: footer note
+export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main }) {
+  const { lang, t, dir, orgName, alt, o, a } = ctx;
+  const sh = o.shared;
+  const tel = (n) => `<a href="tel:+968${n}" data-contact="phone_footer" dir="ltr">${lang === 'en' ? `+968 ${n.slice(0, 4)} ${n.slice(4)}` : n}</a>`;
   return `<!doctype html>
 <html lang="${lang}" dir="${dir}">
 <head>
@@ -171,7 +255,7 @@ export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCt
 <link rel="canonical" href="${esc(c.seo.canonical)}">
 ${alt ? `<link rel="alternate" hreflang="${lang}" href="${esc(c.seo.canonical)}">\n<link rel="alternate" hreflang="${t.langCode}" href="${esc(alt.abs)}">` : ''}
 <meta name="robots" content="index, follow">
-<meta name="theme-color" content="#faf7f1">
+<meta name="theme-color" content="#0b3b33">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="${t.locale}">
@@ -185,28 +269,31 @@ ${alt ? `<link rel="alternate" hreflang="${lang}" href="${esc(c.seo.canonical)}"
 <meta property="og:image:alt" content="${esc(c.seo.ogImageAlt)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@bahjah1_omani">
-<link rel="icon" href="${a('assets/img/logo-96.webp')}" type="image/webp">
+<link rel="icon" href="${a('assets/img/shared/bahjah-logo.webp')}" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;600;700${extraFonts}&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 ${preload}
 <link rel="stylesheet" href="${a('assets/styles.css')}">
+<script>document.documentElement.classList.add('js');</script>
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 <script>window.BAHJAH_LP=${JSON.stringify(pageConfig)};</script>
 <script src="${a('assets/app.js')}" defer></script>
 </head>
-<body${bodyClass ? ` class="${bodyClass}"` : ''}>
-<a class="skip" href="#main">${t.skip}</a>
+<body>
+${SPRITE}
+<a class="skip-link" href="#main">${t.skip}</a>
 
-<header class="site-header" data-header>
-  <div class="wrap header-in">
-    <a class="brand" href="${esc(o.website)}" rel="noopener" data-outbound="org_home">
-      <img src="${a(o.logo.src1x)}" srcset="${a(o.logo.src1x)} 1x, ${a(o.logo.src)} 2x" width="38" height="42" alt="${t.logo}${esc(orgName)}"${src(o.logo.src)}>
+<header class="site-header" id="siteHeader" data-header>
+  <div class="wrap header-inner">
+    <a class="brand" href="#main" aria-label="${esc(orgName)}">
+      <img src="${a('assets/img/shared/bahjah-logo.webp')}" alt="${t.logo}${esc(orgName)}" width="36" height="40">
       <span class="brand-name">${esc(orgName)}</span>
     </a>
     <div class="header-actions">
-      ${alt ? `<a class="lang-switch" href="${esc(alt.href)}" hreflang="${t.langCode}" lang="${t.langCode}" aria-label="${t.langAria}" data-lang-switch="${t.langCode}">${icon('globe')}<span>${t.langLabel}</span></a>` : ''}
-      <a class="btn btn-sm btn-primary header-cta" href="${esc(headerCta.href)}" ${headerCta.attrs}>${esc(headerCta.label)}</a>
+      ${alt ? `<a class="lang-btn" href="${esc(alt.href)}" hreflang="${t.langCode}" lang="${t.langCode}" aria-label="${t.langAria}" data-lang-switch="${t.langCode}">${use('globe')}${t.langShort}</a>` : ''}
+      <a class="icon-btn" href="https://wa.me/${esc(o.contact.whatsapp)}" target="_blank" rel="noopener" aria-label="${t.whatsappAria}" data-contact="whatsapp_header">${use('whatsapp')}</a>
+      <a class="btn btn-primary btn-sm header-cta" href="${esc(headerCta.href)}" ${headerCta.attrs}>${esc(headerCta.label)}</a>
     </div>
   </div>
 </header>
@@ -214,18 +301,31 @@ ${preload}
 ${main}
 
 <footer class="site-footer">
-  <div class="wrap foot-in">
-    <div class="foot-brand">
-      <img src="${a(o.logo.src1x)}" width="38" height="42" alt="" loading="lazy">
-      <div><strong>${esc(orgName)}</strong><span>${esc(lang === 'ar' ? o.nameEn : o.nameAr)}</span></div>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <img src="${a('assets/img/shared/bahjah-logo.webp')}" alt="" width="40" height="44" loading="lazy">
+      <p><b>${esc(orgName)}</b><br>${esc(o.contact.addressAr)}</p>
     </div>
-    <p>${esc(o.contact.addressAr)} · <span dir="ltr">${esc(o.contact.phones.join(' – '))}</span> · ${esc(o.contact.email)}</p>
-    <p><a href="${esc(o.website)}" rel="noopener" data-outbound="org_home">${t.official}</a> · <a href="${esc(o.donationsHub)}" rel="noopener" data-outbound="donations_hub">${t.allDon}</a> · <a href="${esc(o.contact.x)}" target="_blank" rel="noopener" data-outbound="x">X</a></p>
+    <p class="footer-links">
+      ${o.contact.phones.map(tel).join('\n      ')}
+      <a href="mailto:${esc(o.contact.email)}" data-contact="email_footer">${esc(o.contact.email)}</a>
+      <a href="${esc(o.website)}" target="_blank" rel="noopener" data-outbound="org_home">${t.officialSite}</a>
+      <a href="${esc(sh.privacyUrl)}" target="_blank" rel="noopener">${t.privacy}</a>
+      ${alt ? `<a href="${esc(alt.href)}" hreflang="${t.langCode}" lang="${t.langCode}" data-lang-switch="${t.langCode}">${t.langLabel}</a>` : ''}
+    </p>
+    <details class="sources">
+      <summary>${t.sourcesTitle}</summary>
+      <ul>
+        ${(c.sources || []).map((x) => `<li>${esc(x)}</li>`).join('\n        ')}
+      </ul>
+    </details>
+    <p class="copy">${esc(c.disclaimer || '')}</p>
   </div>
 </footer>
 
-<div class="sticky-cta" data-sticky aria-hidden="true">
-  <a class="btn btn-primary btn-block" href="${esc(stickyCta.href)}" ${stickyCta.attrs} tabindex="-1"><span>${esc(stickyCta.label)}</span>${icon('arrow', 'ico ico-dir')}</a>
+<div class="sticky-cta" id="stickyCta" data-sticky aria-hidden="true">
+  ${stickyCta.price ? `<span class="sticky-price"><b data-sticky-value>${esc(stickyCta.price.value)}</b><small>${esc(stickyCta.price.note)}</small></span>` : ''}
+  <a class="btn btn-primary" href="${esc(stickyCta.href)}" ${stickyCta.attrs} tabindex="-1">${esc(stickyCta.label)}</a>
 </div>
 
 ${

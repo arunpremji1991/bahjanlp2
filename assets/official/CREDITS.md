@@ -22,6 +22,7 @@ Retrieved 28 Sep 2026 from Internet Archive captures of bahjah.org.om (Feb–Jun
 | `waqf/charity-buildings`, `waqf-complex`, `industrial`, `agri`, `hall` | Project logos from bahjah.org.om projects section (`…/2026/02/v45we.jpg`, `Screenshot-2026-02-08-at-12.37.55-AM.png`, `Geeeeeeeeeeeee-3-1024x972.png`, `ny65r5.jpg`, `v45e3.jpg`) | waqf projects |
 | `waqf/sadaqa-640/1024.webp` | `…/2025/08/الصدقة.jpeg`, the official image of the «صدقة» donation product | waqf final CTA background |
 | `og-waqf.jpg` | Composite of the seedling image + logo (both above) | waqf social share image |
+| `shared/*` (logo, awards, program-education, program-aid-supplies, photo-signing, photo-event, photo-outing) | Same files as the orphan-sponsorship landing page. Official Bahjah logo and award badges (homepage) and activity photos from the official profile PDF | Shared header, trust, «on the ground», footer |
 | `og-renovation.jpg` | Composite of before/after photo #5 + logo (both above) | social share image |
 | `campaign-10-homes.jpeg` (src only, **not shown on the page**) | `…/2026/03/IMG_0515.jpeg`, official poster "حملة ترميم 10 منازل أرامل وأيتام – تحديث 3 – 18/3/2026" | Reference: campaign wording, donation channels, and the QR code confirming the payment URL |
 
