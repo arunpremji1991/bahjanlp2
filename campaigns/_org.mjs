@@ -118,7 +118,7 @@ org.shared = {
     text: 'جمعية خيرية غير حكومية تأسست بالمرسوم السلطاني رقم 14/2000، ترعى الأيتام داخل منازلهم وخارجها.',
     facts: [
       { icon: 'calendar', value: '2014', label: 'سنة التأسيس' },
-      { icon: 'users', value: '1,361', label: 'يتيماً مسجّلاً', note: '2023' }, // CV "Statistics - 2023: Registered orphans 1361"
+      { icon: 'users', value: '1,361', label: 'يتيمًا مسجّلًا', note: '2023' }, // CV "Statistics - 2023: Registered orphans 1361"
       { icon: 'shield', value: 'ISO', label: 'شهادة الأيزو', note: '2023' },
       { icon: 'award', value: '7', label: 'جوائز وتكريمات', note: '2013 – 2024' },
     ],

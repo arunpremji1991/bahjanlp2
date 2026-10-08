@@ -49,6 +49,7 @@ export const STR = {
     calcLabel: 'كم تريد أن تساهم؟', calcHint: 'اكتب المبلغ لتعرف ماذا تُدخل في خانة «الكمية».',
     calcOut: 'اكتب <strong>{n}</strong> في خانة «الكمية» بصفحة الدفع = تبرع بـ <strong>{v} ر.ع.</strong>',
     unitOne: 'ريال عماني واحد',
+    unitHelp: '«1,000 ر.ع.» في صفحة الدفع = ريال واحد · كيف أكتب المبلغ؟',
     unitTxt: 'تعرض صفحة الدفع الرسمية الريال بثلاث خانات عشرية (1,000 بيسة). ',
     unitTxt1: 'اكتب مبلغ مساهمتك بالريال في خانة <strong>«الكمية»</strong>.',
     unitTxtN: (v) => `كل وحدة تساوي ${v} ر.ع.، فحدّد عدد الوحدات في خانة <strong>«الكمية»</strong>.`,
@@ -63,7 +64,7 @@ export const STR = {
     secureTail: '، والدفع ببطاقات الائتمان والخصم عبر بوابة بنك مسقط SmartPay.',
     otherTitle: 'طرق أخرى للتبرع', bank: 'التحويل البنكي', copy: 'نسخ', copied: 'تم النسخ', copyAria: 'نسخ رقم حساب ',
     accName: 'الحسابات باسم: ', sms: 'رسالة نصية',
-    smsText: (s) => `أرسل كلمة <strong>«${s.keyword}»</strong> إلى الرقم المجاني <strong dir="ltr">${s.number}</strong> للتبرع بـ${s.value} للأيتام (${s.operators}).`,
+    smsText: (s) => `أرسل كلمة <strong>«${s.keyword}»</strong> إلى الرقم المجاني <strong dir="ltr">${s.number}</strong> للتبرع ب${s.value} للأيتام (${s.operators}).`,
     smsBtn: 'إرسال الرسالة', app: 'تطبيق بهجة', appText: 'حمّل تطبيق الجمعية للتبرع والمتابعة.',
     whyTitle: 'جهة موثوقة ترعى الأيتام منذ 2014', fact1: 'جمعية خيرية غير حكومية', fact2: 'تأسست في 10 فبراير 2014', fact3: 'رؤيتنا',
     awardsTitle: 'شهادات وجوائز حصلت عليها الجمعية', yearSfx: 'م', awardsSrc: 'كما وردت في موقع الجمعية الرسمي.',
@@ -84,6 +85,7 @@ export const STR = {
     calcLabel: 'How much would you like to give?', calcHint: 'Type an amount to see what to enter in the “الكمية” (Quantity) field.',
     calcOut: 'Enter <strong>{n}</strong> in the “الكمية” (Quantity) field on the payment page = a gift of <strong>{v} OMR</strong>',
     unitOne: 'One Omani rial',
+    unitHelp: '«1,000 ر.ع.» on the payment page = 1 OMR · How do I enter my amount?',
     unitTxt: 'The official payment page (in Arabic) shows rials with three decimal places (1,000 baisa). ',
     unitTxt1: 'Type your gift in rials in the <strong>“الكمية” (Quantity)</strong> field.',
     unitTxtN: (v) => `Each unit is ${v} OMR, so enter the number of units in the <strong>“الكمية” (Quantity)</strong> field.`,
@@ -168,7 +170,7 @@ export const sectionHead = ({ kicker, title, text, id, lead }) => `<div class="s
         ${kicker ? `<span class="kicker">${esc(kicker)}</span>` : ''}
         <h2${id ? ` id="${id}"` : ''}>${esc(title)}</h2>
         ${lead ? `<p class="lead">${esc(lead)}</p>` : ''}
-        ${text ? (Array.isArray(text) ? text : [text]).map((x) => `<p>${esc(x)}</p>`).join('') : ''}
+        ${text ? (Array.isArray(text) && text.length > 1 ? `<div class="head-body">${text.map((x) => `<p>${esc(x)}</p>`).join('')}</div>` : `<p>${esc(Array.isArray(text) ? text[0] : text)}</p>`) : ''}
       </div>`;
 
 // ── Shared sections (identical on every Bahjah landing page) ─────────────────

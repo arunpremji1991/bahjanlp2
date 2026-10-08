@@ -101,11 +101,9 @@ export default {
     intro: "Before and after photos of maintenance and renovation work carried out by Bahjah, as published in its official profile. Drag the handle to compare.",
     introLines: [
       'These are not just before-and-after photos; they are moments from the lives of families who needed someone to stand with them.',
-      'Before the renovation: needs and problems waiting to be fixed. After: a safer, more comfortable space for the family.',
       'Behind every photo… a family. Behind every gift… a person.',
-      "Drag the handle to compare. The photos come from the maintenance and renovation work documented in Bahjah's official profile.",
     ],
-    source: "Photos from Bahjah's official profile (maintenance and renovation section).",
+    source: "Drag the handle to compare · Photos from Bahjah's official profile (maintenance and renovation section).",
     pairs: ar.compare.pairs.map((p) => ({ ...p, caption: captions[p.id] || p.caption })),
   },
 
@@ -139,13 +137,13 @@ export default {
     title: 'Where can your impact reach?',
     intro: 'Donations go through Bahjah\'s official "Building & Renovation" page, which Bahjah describes as: "Help us renovate and build orphans\' homes."',
     items: [
-      { icon: 'roof', title: 'Repairing deteriorated roofs', text: 'A safer roof means better protection for the family from the weather.' },
-      { icon: 'wall', title: 'Restoring cracked walls', text: 'Fixing what needs fixing, so the home stays a sound and safe place to live.' },
-      { icon: 'tools', title: 'Preparing essential facilities', text: 'Kitchens, bathrooms and other essentials that make a home more suitable for the family.' },
-      { icon: 'home', title: "Building orphans' homes", text: 'When renovation is not enough, building can be the start of a new and safer home.' },
+      { icon: 'roof', title: 'Repairing deteriorated roofs', text: 'A safer roof protects the family from the weather.' },
+      { icon: 'wall', title: 'Restoring cracked walls', text: 'So the home stays a safe, sound place to live.' },
+      { icon: 'tools', title: 'Preparing essential facilities', text: 'Kitchens, bathrooms and other essentials a family needs.' },
+      { icon: 'home', title: "Building orphans' homes", text: 'When renovation is not enough, building can start a new, safer home.' },
     ],
-    itemsSource: 'Items from Bahjah\'s renovation campaign announcement (March 2026) and its description of the "Building & Renovation" donation page.',
-    note: "Bahjah's team decides the work needed for each home after a visit and assessment, as documented in its maintenance and renovation method.",
+    itemsSource: 'Source: the renovation campaign announcement (March 2026) and the "Building & Renovation" page.',
+    note: "Bahjah's team decides what each home needs after a visit and assessment.",
   },
 
   evidence: {
@@ -163,8 +161,8 @@ export default {
       {
         ...ar.evidence.items[0],
         date: 'Since 2018',
-        title: 'Home renovation and maintenance',
-        text: "After Cyclone Mekunu, Bahjah's team visited homes, recorded cases, assessed the maintenance needed and carried it out. Bahjah also implemented the Minister of Social Development's recommendation to maintain 5 homes in Wilayat Mirbat.",
+        title: 'Maintaining homes in Wilayat Mirbat',
+        text: "Bahjah implemented the Minister of Social Development's recommendation to maintain 5 homes in Wilayat Mirbat, as part of the maintenance and renovation work that began after Cyclone Mekunu.",
       },
       {
         ...ar.evidence.items[1],
@@ -254,7 +252,7 @@ export default {
     text: [
       'The Omani Bahjah Orphan Society is a non-governmental charity dedicated to caring for orphans, founded on 10 February 2014 under Royal Decree No. 14/2000.',
       'Bahjah provides care and assistance to orphans, including financial, emotional, health, educational and social support.',
-      'Our goal is not only that an orphan lives… but that they grow up in a safer, more dignified and hopeful environment.',
+      'Its goal is not only that an orphan lives… but that they grow up in a safer, more dignified and hopeful environment.',
     ],
   },
 
@@ -268,9 +266,9 @@ export default {
     "Bahjah's announcement of the campaign to renovate 10 homes of widows and orphans (March 2026) — campaign items and other donation channels",
   ],
   disclaimer: "This landing page directs visitors to the Society's official donation page. It does not process payments or store financial data.",
-  sticky: { value: '1 OMR', note: 'minimum gift' },
+  sticky: { value: '1 OMR', note: 'even one rial' },
   nav: [
-    { href: '#covers', label: 'What you support' },
+    { href: '#covers', label: 'Your impact' },
     { href: '#impact', label: 'Before & after' },
     { href: '#trust', label: 'Why Bahjah' },
     { href: '#faq', label: 'FAQ' },

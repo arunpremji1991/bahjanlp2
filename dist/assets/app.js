@@ -326,22 +326,18 @@
 
   /* ── 8. Sticky mobile CTA: visible when no other CTA is on screen ───── */
   var sticky = document.querySelector('[data-sticky]');
-  var blocks = document.querySelectorAll('.cta-block');
+  // Watch the in-page CTA buttons themselves: the sticky bar hides only while one is fully on screen.
+  var blocks = document.querySelectorAll('.cta-block .btn-primary, .cta-block .btn-light');
   if (sticky && 'IntersectionObserver' in window && blocks.length) {
     var visible = new Set();
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
-      var past = window.scrollY > 200;
-      var show = past && visible.size === 0;
+      entries.forEach(function (e) { if (e.intersectionRatio >= 0.99) visible.add(e.target); else visible.delete(e.target); });
+      var show = visible.size === 0;
       sticky.classList.toggle('is-visible', show);
       sticky.setAttribute('aria-hidden', show ? 'false' : 'true');
       var link = sticky.querySelector('a'); if (link) link.tabIndex = show ? 0 : -1;
-    });
+    }, { threshold: [0, 0.99, 1] });
     blocks.forEach(function (b) { io.observe(b); });
-    window.addEventListener('scroll', function () {
-      if (window.scrollY <= 200) { sticky.classList.remove('is-visible'); sticky.setAttribute('aria-hidden', 'true'); }
-      else if (visible.size === 0) { sticky.classList.add('is-visible'); sticky.setAttribute('aria-hidden', 'false'); }
-    }, { passive: true });
   }
 
   /* ── 9. Before / after sliders ──────────────────────────────────────── */

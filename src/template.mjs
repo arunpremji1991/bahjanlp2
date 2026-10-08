@@ -43,7 +43,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
         <div class="thumbs" role="group" aria-label="${t.thumbs}">
           ${cmp.pairs
             .map(
-              (pr, i) => `<button type="button" class="thumb${i === (cmp.heroIndex || 0) ? ' is-active' : ''}" data-thumb="${i}" aria-label="${esc(pr.caption)}" aria-pressed="${i === (cmp.heroIndex || 0)}"><img src="${a(pr.afterSm)}" width="80" height="60" alt="" loading="lazy" decoding="async"></button>`
+              (pr, i) => `<button type="button" class="thumb${i === (cmp.heroIndex || 0) ? ' is-active' : ''}" data-thumb="${i}" aria-label="${esc(pr.caption)}" aria-pressed="${i === (cmp.heroIndex || 0)}"><img src="${a(pr.afterSm)}" width="80" height="60" alt="" decoding="async"></button>`
             )
             .join('')}
         </div>
@@ -88,7 +88,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
     <ul class="covers covers--${[3, 4, 6].includes(S.items.length) ? S.items.length : 5} reveal">
       ${S.items.map((s) => `<li class="cover"><span class="cover-ico">${icon(s.icon)}</span><h3>${esc(s.title)}</h3>${s.text ? `<p>${esc(s.text)}</p>` : ''}</li>`).join('\n      ')}
     </ul>
-    <p class="covers-note">${esc([S.itemsSource, S.note].filter(Boolean).join(' '))}</p>
+    <p class="covers-note">${esc([S.note, S.itemsSource].filter(Boolean).join(' '))}</p>
   </div>
 </section>`;
 
@@ -169,8 +169,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
       <div class="plan-opt"><b>${use('hands')} ${esc(c.payment.label)}</b>${unit ? `<span class="plan-amount">${unit.value} <small>${t.cur}</small></span>` : ''}</div>
       ${chips}
       ${am.anyAmountNote && !am.officialAmounts.length ? `<p class="hadith">${esc(am.anyAmountNote)}</p>` : ''}
-      ${unitBox}
-      ${calc}
+      ${unitBox || calc ? `<details class="unit-help"><summary>${t.unitHelp}</summary>${unitBox}${calc}</details>` : ''}
       <div class="cta-block" id="cta-mid">
         ${ctaBtn('amount', 'btn-lg btn-block', am.cta || c.cta.primary)}
         <p class="secure">${use('lock')} ${esc(c.payment.domainNote)}${t.secureTail}</p>
@@ -222,7 +221,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
       ${(ev.outro || []).map((x) => `<p>${esc(x)}</p>`).join('\n      ')}
       ${ev.introLink ? `<p class="src"><a href="${esc(ev.introLink)}" target="_blank" rel="noopener" data-outbound="evidence">${t.evSourceArchived}</a></p>` : ''}
     </div>` : ''}
-    <ul class="ev-grid reveal">
+    <ul class="ev-grid ev-grid--${ev.items.length} reveal">
       ${ev.items
         .map(
           (e) => `<li class="ev">
