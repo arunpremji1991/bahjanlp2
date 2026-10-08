@@ -168,13 +168,13 @@ export const sectionHead = ({ kicker, title, text, id, lead }) => `<div class="s
         ${kicker ? `<span class="kicker">${esc(kicker)}</span>` : ''}
         <h2${id ? ` id="${id}"` : ''}>${esc(title)}</h2>
         ${lead ? `<p class="lead">${esc(lead)}</p>` : ''}
-        ${text ? `<p>${esc(text)}</p>` : ''}
+        ${text ? (Array.isArray(text) ? text : [text]).map((x) => `<p>${esc(x)}</p>`).join('') : ''}
       </div>`;
 
 // ── Shared sections (identical on every Bahjah landing page) ─────────────────
-export function trustSection(ctx) {
+export function trustSection(ctx, override = null) {
   const { a } = ctx;
-  const T = ctx.o.shared.trust;
+  const T = { ...ctx.o.shared.trust, ...(override || {}) };
   return `<section class="section section-sand" id="trust" aria-labelledby="trust-title" data-section="trust">
   <div class="wrap">
     <div class="why-grid">
@@ -222,14 +222,15 @@ export function faqSection(ctx, faq, { kicker, title }) {
 }
 
 // Final CTA: bg image + title + one button + contact row (WhatsApp, phone)
-export function finalSection(ctx, { title, text, cta, bg }) {
+export function finalSection(ctx, { title, text, cta, bg, note }) {
   const { a, t, o } = ctx;
   return `<section class="final" id="final" aria-labelledby="final-title" data-section="final">
   <div class="final-bg" aria-hidden="true"><img src="${a(bg.src)}" alt="" width="${bg.w}" height="${bg.h}" loading="lazy"></div>
   <div class="wrap final-inner reveal">
     <h2 id="final-title">${esc(title)}</h2>
-    <p>${esc(text)}</p>
+    ${(Array.isArray(text) ? text : [text]).map((x) => `<p class="final-line">${esc(x)}</p>`).join('\n    ')}
     <div class="cta-block" id="cta-final">${cta}</div>
+    ${note ? `<p class="final-note">${esc(note)}</p>` : ''}
     <div class="final-contact">
       <a href="https://wa.me/${esc(o.contact.whatsapp)}" target="_blank" rel="noopener" data-contact="whatsapp_final">${use('whatsapp')} ${t.whatsapp}</a>
       <a href="tel:+968${esc(o.contact.phones[0])}" data-contact="phone_final">${use('phone')} <span dir="ltr">${esc(o.contact.phones[0])}</span></a>
@@ -241,7 +242,7 @@ export function finalSection(ctx, { title, text, cta, bg }) {
 // ── Page shell ────────────────────────────────────────────────────────────
 // headerCta / stickyCta: { href, attrs, label }; stickyCta.price: { value, note } (optional)
 // c.sources: list shown in the footer «مصادر المحتوى والصور»; c.disclaimer: footer note
-export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main }) {
+export function shell(c, ctx, { tracking, pageConfig, ld, preload = '', headerCta, stickyCta, main, extraHead = '' }) {
   // c.nav: [{ href: '#section', label }] → header section menu (desktop)
   const { lang, t, dir, orgName, alt, o, a } = ctx;
   const sh = o.shared;
@@ -275,6 +276,7 @@ ${alt ? `<link rel="alternate" hreflang="${lang}" href="${esc(c.seo.canonical)}"
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 ${preload}
+${extraHead}
 <link rel="stylesheet" href="${a('assets/styles.css')}">
 <script>document.documentElement.classList.add('js');</script>
 <script type="application/ld+json">${JSON.stringify(ld)}</script>

@@ -68,7 +68,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
     <div class="hero-copy">
       <span class="eyebrow">${use('shield')} ${esc(h.eyebrow)}</span>
       <h1 id="hero-title">${esc(h.title)}${h.titleAccent ? ` <span class="accent">${esc(h.titleAccent)}</span>` : ''}</h1>
-      <p class="lede">${esc(h.supporting || h.need)}</p>
+      <p class="lede">${h.supportingLines ? h.supportingLines.map(esc).join('<br>') : esc(h.supporting || h.need)}</p>
       ${progress}
       <div class="hero-cta cta-block" id="cta-hero">
         ${h.priceTag ? `<p class="price-tag"><b>${esc(h.priceTag.value)}</b><span>${esc(h.priceTag.text)}</span></p>` : ''}
@@ -85,12 +85,41 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const supports = `<section class="section" id="covers" aria-labelledby="covers-title" data-section="supports">
   <div class="wrap">
     ${sectionHead({ kicker: t.kSupports, title: S.title, text: S.intro, id: 'covers-title' })}
-    <ul class="covers covers--${S.items.length === 6 ? 6 : S.items.length === 3 ? 3 : 5} reveal">
+    <ul class="covers covers--${[3, 4, 6].includes(S.items.length) ? S.items.length : 5} reveal">
       ${S.items.map((s) => `<li class="cover"><span class="cover-ico">${icon(s.icon)}</span><h3>${esc(s.title)}</h3>${s.text ? `<p>${esc(s.text)}</p>` : ''}</li>`).join('\n      ')}
     </ul>
     <p class="covers-note">${esc([S.itemsSource, S.note].filter(Boolean).join(' '))}</p>
   </div>
 </section>`;
+
+  // ── Optional story sections (content only; built from existing components) ──
+  const HM = c.homeMeaning;
+  const homeMeaning = HM
+    ? `<section class="section section-sand" id="home-meaning" aria-labelledby="home-title" data-section="home_meaning">
+  <div class="wrap">
+    ${sectionHead({ kicker: HM.kicker, title: HM.title, id: 'home-title' })}
+    <div class="prose prose-center reveal">
+      ${HM.lines.map((x) => `<p${x.strong ? ' class="strong"' : ''}>${esc(x.text || x)}</p>`).join('\n      ')}
+    </div>
+  </div>
+</section>`
+    : '';
+  const M = c.mercy;
+  const mercy = M
+    ? `<section class="section section-mercy" id="mercy" aria-labelledby="mercy-title" data-section="mercy">
+  <div class="wrap">
+    ${sectionHead({ kicker: M.kicker, title: M.title, id: 'mercy-title' })}
+    <figure class="verse reveal">
+      <blockquote lang="ar" dir="rtl">${esc(M.verse)}</blockquote>
+      <figcaption>${esc(M.ref)}</figcaption>
+    </figure>
+    <div class="prose prose-center reveal">
+      ${M.lines.map((x) => `<p${x.strong ? ' class="strong"' : ''}>${esc(x.text || x)}</p>`).join('\n      ')}
+    </div>
+    ${M.cta ? `<div class="section-cta cta-block">${ctaBtn('mercy', 'btn-lg', M.cta)}</div>` : ''}
+  </div>
+</section>`
+    : '';
 
   // ── Need + donate card ────────────────────────────────────────────────────
   const am = c.amount;
@@ -136,13 +165,14 @@ export function render(c, tracking, credits, base = '', opts = {}) {
     </article>
     <aside class="sponsor-card reveal" aria-labelledby="card-title">
       <h3 id="card-title">${esc(am.title)}</h3>
+      ${am.introLines ? `<div class="card-intro">${am.introLines.map((x) => `<p>${esc(x)}</p>`).join('')}</div>` : ''}
       <div class="plan-opt"><b>${use('hands')} ${esc(c.payment.label)}</b>${unit ? `<span class="plan-amount">${unit.value} <small>${t.cur}</small></span>` : ''}</div>
       ${chips}
       ${am.anyAmountNote && !am.officialAmounts.length ? `<p class="hadith">${esc(am.anyAmountNote)}</p>` : ''}
       ${unitBox}
       ${calc}
       <div class="cta-block" id="cta-mid">
-        ${ctaBtn('amount', 'btn-lg btn-block')}
+        ${ctaBtn('amount', 'btn-lg btn-block', am.cta || c.cta.primary)}
         <p class="secure">${use('lock')} ${esc(c.payment.domainNote)}${t.secureTail}</p>
       </div>
       ${c.otherWays.show ? `<p class="alt-link"><a href="#other-ways" data-outbound="other_ways">${t.otherTitle} ↓</a></p>` : ''}
@@ -154,7 +184,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const impact = cmp
     ? `<section class="section" id="impact" aria-labelledby="impact-title" data-section="impact">
   <div class="wrap">
-    ${sectionHead({ kicker: t.kImpact, title: cmp.title, text: cmp.intro, id: 'impact-title' })}
+    ${sectionHead({ kicker: t.kImpact, title: cmp.title, text: cmp.introLines || cmp.intro, id: 'impact-title' })}
     <ul class="ba-grid reveal" data-impact-grid>
       ${cmp.pairs.map((pr, i) => `<li class="ba-card">${slider(pr, { size: 'sm', idx: i })}<p>${esc(pr.caption)}</p></li>`).join('\n      ')}
     </ul>
@@ -170,11 +200,11 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const how = c.process
     ? `<section class="section${cmp ? ' section-sand' : ''}" id="how" aria-labelledby="how-title" data-section="process">
   <div class="wrap">
-    ${sectionHead({ kicker: t.kProcess, title: c.process.title, id: 'how-title' })}
+    ${sectionHead({ kicker: c.process.kicker || t.kProcess, title: c.process.title, id: 'how-title' })}
     <ol class="steps${c.process.steps.length === 4 ? ' steps--4' : ''} reveal">
-      ${c.process.steps.map((s, i) => `<li class="step"><span class="step-ico">${use(stepIcons[i % stepIcons.length])}</span><div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div></li>`).join('\n      ')}
+      ${c.process.steps.map((s, i) => `<li class="step"><span class="step-ico">${use(s.icon || stepIcons[i % stepIcons.length])}</span><div><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p></div></li>`).join('\n      ')}
     </ol>
-    <p class="src">${esc(c.process.source)}</p>
+    ${c.process.source ? `<p class="src">${esc(c.process.source)}</p>` : ''}
   </div>
 </section>`
     : '';
@@ -185,7 +215,13 @@ export function render(c, tracking, credits, base = '', opts = {}) {
     ev && ev.items && ev.items.length
       ? `<section class="section" id="evidence" aria-labelledby="evidence-title" data-section="evidence">
   <div class="wrap">
-    ${sectionHead({ kicker: t.kEvidence, title: ev.title, id: 'evidence-title' })}
+    ${sectionHead({ kicker: ev.kicker || t.kEvidence, title: ev.title, id: 'evidence-title' })}
+    ${ev.intro ? `<div class="prose reveal">
+      ${ev.intro.map((x) => `<p>${esc(x)}</p>`).join('\n      ')}
+      ${ev.bullets ? `<ul class="checks">${ev.bullets.map((x) => `<li>${use('check')}<span>${esc(x)}</span></li>`).join('')}</ul>` : ''}
+      ${(ev.outro || []).map((x) => `<p>${esc(x)}</p>`).join('\n      ')}
+      ${ev.introLink ? `<p class="src"><a href="${esc(ev.introLink)}" target="_blank" rel="noopener" data-outbound="evidence">${t.evSourceArchived}</a></p>` : ''}
+    </div>` : ''}
     <ul class="ev-grid reveal">
       ${ev.items
         .map(
@@ -208,7 +244,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const other = c.otherWays.show
     ? `<section class="section section-sand" id="other-ways" aria-labelledby="other-title" data-section="other_ways">
   <div class="wrap">
-    ${sectionHead({ kicker: t.kOther, title: t.otherTitle, id: 'other-title' })}
+    ${sectionHead({ kicker: t.kOther, title: c.otherWays.title || t.otherTitle, id: 'other-title' })}
     <div class="ways reveal">
       <div class="way">
         <h3>${icon('bank')} ${t.bank}</h3>
@@ -243,16 +279,18 @@ export function render(c, tracking, credits, base = '', opts = {}) {
 
   const main = `<main id="main">
 ${hero}
+${homeMeaning}
 ${supports}
+${mercy}
 ${need}
 ${impact}
 ${how}
 ${evidence}
 ${other}
-${trustSection(ctx)}
+${trustSection(ctx, c.trust)}
 ${newsSection(ctx)}
 ${faqSection(ctx, c.faq, { kicker: t.faqKicker, title: c.faqTitle || t.faqTitle })}
-${finalSection(ctx, { title: c.final.title, text: c.final.text, cta: ctaBtn('final', 'btn-light btn-lg'), bg: finalBg })}
+${finalSection(ctx, { title: c.final.title, text: c.final.lines || c.final.text, note: c.final.note, cta: ctaBtn('final', 'btn-light btn-lg'), bg: finalBg })}
 </main>`;
 
   const pageConfig = {
@@ -275,6 +313,8 @@ ${finalSection(ctx, { title: c.final.title, text: c.final.text, cta: ctaBtn('fin
     ld: baseLd(c, ctx),
     main,
     preload: heroPair ? `<link rel="preload" as="image" href="${a(heroPair.before)}" fetchpriority="high">` : h.image ? `<link rel="preload" as="image" href="${a(h.image.src)}" fetchpriority="high">` : '',
+    // Quran verse: Amiri, subset to the verse's characters only (tiny download)
+    extraHead: c.mercy ? `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&text=${encodeURIComponent(c.mercy.verse)}&display=swap">` : '',
     headerCta: payCta('header', c.cta.short),
     stickyCta: { ...payCta('sticky', c.cta.short), price: c.sticky || null },
   });

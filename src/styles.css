@@ -373,8 +373,27 @@ svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-wi
 /* Covers: extra colour variants + 3/6-item layouts */
 .cover:nth-child(5) .cover-ico { background: var(--teal-100); color: var(--teal-700); }
 .cover:nth-child(6) .cover-ico { background: var(--gold-100); color: #a8720f; }
-.covers--6 .cover:last-child, .covers--3 .cover:last-child { grid-column: auto; }
+.covers--6 .cover:last-child, .covers--3 .cover:last-child, .covers--4 .cover:last-child { grid-column: auto; }
 .covers--3 { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+
+/* Story text blocks (content sections built from existing tokens) */
+.prose { max-width: 700px; margin: 0 auto; color: var(--ink-2); font-size: 17.5px; line-height: 1.9; }
+.prose p { margin: 0 0 .55em; }
+.prose p.strong { font: 700 19px/1.7 var(--f-display); color: var(--teal-900); }
+.prose p:not(.strong) + p.strong, .prose p.strong + p:not(.strong) { margin-top: .9em; }
+.prose-center { text-align: center; }
+.prose .checks { max-width: 520px; margin: 6px auto 16px; text-align: start; }
+.prose + .ev-grid { margin-top: 30px; }
+.section-mercy { background: var(--teal-50); }
+.verse { margin: 0 auto 26px; max-width: 700px; background: var(--paper); border: 1px solid var(--teal-100); border-radius: var(--r-lg); padding: 26px 22px 20px; text-align: center; box-shadow: var(--shadow); }
+.verse blockquote { margin: 0 0 8px; font: 700 clamp(22px, 5.2vw, 30px)/1.9 "Amiri", var(--f-display); color: var(--teal-900); }
+.verse figcaption { font-size: 14px; color: #a8720f; font-weight: 600; }
+.card-intro { margin: -4px 0 16px; color: var(--ink-2); font-size: 15.5px; line-height: 1.75; }
+.card-intro p { margin: 0 0 .35em; }
+.final-line { margin: 0 0 .35em !important; }
+.final .cta-block { margin-top: 24px; }
+.section-head p + p { margin-top: .6em; }
+.final-note { margin: 18px 0 0 !important; font: 600 16px/1.6 var(--f-display) !important; color: var(--gold-500) !important; }
 
 /* Need story extras */
 .need-story .src { text-align: start; margin: 12px 0 0; }
@@ -487,6 +506,7 @@ body.consent-open .sticky-cta { display: none; }
 @media (min-width: 640px) {
   .covers--6 { grid-template-columns: repeat(3, 1fr); }
   .covers--3 { grid-template-columns: repeat(3, 1fr); }
+  .covers--4 { grid-template-columns: repeat(4, 1fr); }
   .ba-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ba-grid:not(.is-expanded) > li:nth-child(n+4) { display: block; }
   .more-btn { display: none; }
