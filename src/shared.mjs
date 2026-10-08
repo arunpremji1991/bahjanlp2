@@ -50,6 +50,7 @@ export const STR = {
     calcOut: 'اكتب <strong>{n}</strong> في خانة «الكمية» بصفحة الدفع = تبرع بـ <strong>{v} ر.ع.</strong>',
     unitOne: 'ريال عماني واحد',
     unitHelp: '«1,000 ر.ع.» في صفحة الدفع = ريال واحد · كيف أكتب المبلغ؟',
+    illustrative: 'صورة تعبيرية',
     unitTxt: 'تعرض صفحة الدفع الرسمية الريال بثلاث خانات عشرية (1,000 بيسة). ',
     unitTxt1: 'اكتب مبلغ مساهمتك بالريال في خانة <strong>«الكمية»</strong>.',
     unitTxtN: (v) => `كل وحدة تساوي ${v} ر.ع.، فحدّد عدد الوحدات في خانة <strong>«الكمية»</strong>.`,
@@ -86,6 +87,7 @@ export const STR = {
     calcOut: 'Enter <strong>{n}</strong> in the “الكمية” (Quantity) field on the payment page = a gift of <strong>{v} OMR</strong>',
     unitOne: 'One Omani rial',
     unitHelp: '«1,000 ر.ع.» on the payment page = 1 OMR · How do I enter my amount?',
+    illustrative: 'Illustrative image',
     unitTxt: 'The official payment page (in Arabic) shows rials with three decimal places (1,000 baisa). ',
     unitTxt1: 'Type your gift in rials in the <strong>“الكمية” (Quantity)</strong> field.',
     unitTxtN: (v) => `Each unit is ${v} OMR, so enter the number of units in the <strong>“الكمية” (Quantity)</strong> field.`,
@@ -226,8 +228,9 @@ export function faqSection(ctx, faq, { kicker, title }) {
 // Final CTA: bg image + title + one button + contact row (WhatsApp, phone)
 export function finalSection(ctx, { title, text, cta, bg, note }) {
   const { a, t, o } = ctx;
-  return `<section class="final" id="final" aria-labelledby="final-title" data-section="final">
-  <div class="final-bg" aria-hidden="true"><img src="${a(bg.src)}" alt="" width="${bg.w}" height="${bg.h}" loading="lazy"></div>
+  return `<section class="final${bg.illustrative ? ' final--photo' : ''}" id="final" aria-labelledby="final-title" data-section="final">
+  <div class="final-bg" aria-hidden="true"><img src="${a(bg.src)}" ${bg.srcset ? `srcset="${bg.srcset}" sizes="100vw" ` : ''}alt="" width="${bg.w}" height="${bg.h}" loading="lazy"></div>
+  ${bg.illustrative ? `<span class="illus-tag">${t.illustrative}</span>` : ''}
   <div class="wrap final-inner reveal">
     <h2 id="final-title">${esc(title)}</h2>
     ${(Array.isArray(text) ? text : [text]).map((x) => `<p class="final-line">${esc(x)}</p>`).join('\n    ')}

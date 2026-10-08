@@ -80,6 +80,7 @@ export default {
       { text: 'It is restoring a space where people live with dignity.', strong: true },
       'And your gift can be part of that safety.',
     ],
+    photo: { ...ar.homeMeaning.photo, alt: 'Illustrative image: an Omani boy studies by the window of his home while his mother packs his school bag' },
   },
 
   mercy: {
@@ -93,6 +94,7 @@ export default {
       "When you help renovate an orphan family's home, you are not only building walls… you are helping create safety and peace of mind.",
     ],
     cta: 'Be part of this good',
+    photo: { ...ar.mercy.photo, alt: "Illustrative image: an Omani boy holds his guardian's hand at the door of their home at sunset" },
   },
 
   compare: {
@@ -245,6 +247,7 @@ export default {
     ],
     text: 'Whatever the amount, your gift goes to the "Building & Renovation" fund for orphans\' homes at the Omani Bahjah Orphan Society.',
     note: 'May Allah accept our good deeds and yours.',
+    photo: { ...ar.final.photo, alt: 'Illustrative image: a girl stands at the door of her warm home in the evening' },
   },
 
   trust: {
@@ -258,6 +261,7 @@ export default {
 
   faqTitle: "Questions about giving to renovate orphans' homes",
   sources: [
+    'Photos in "What a home means", "Mercy and kindness" and the closing section: AI-generated illustrative images, not real families',
     'bahjah.org.om/wp/ — about, founding date, awards, contact details',
     'bahjah.org.om/wp/product/بناء-و-ترميم/ — the "Building & Renovation" donation page and unit value',
     'bahjah.org.om/wp/الاسئلة-الشائعة/ — payment methods (Bank Muscat SmartPay)',

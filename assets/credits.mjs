@@ -1,10 +1,18 @@
-// Image credits: every image on the page is an official Bahjah asset.
+// Image credits: every image is an official Bahjah asset, except the labelled
+// AI-generated illustrative story photos listed first.
 // Key = local optimised file; value = original official source.
 // Rendered on each <img> as data-source="…". Mirrored in assets/official/CREDITS.md.
 const U = 'https://bahjah.org.om/wp/wp-content/uploads';
 const CV = `${U}/2025/08/CV-Print-Proof.pdf`;
 
 export const credits = {
+  // Exception: AI-generated illustrative photos (Higgsfield · GPT Image 2.5, Oct 2026).
+  // Not Bahjah families; always shown with the «صورة تعبيرية» label, never as evidence.
+  ...Object.fromEntries(
+    ['home-window', 'doorway-guardian', 'threshold-evening'].flatMap((n) =>
+      [720, 1280].map((w) => [`assets/img/story/${n}-${w}.webp`, 'AI-generated illustrative image (Higgsfield, GPT Image 2.5) – صورة تعبيرية'])
+    )
+  ),
   'assets/img/logo-96.webp': `${U}/2025/08/Bahjah.png`,
   'assets/img/logo-192.webp': `${U}/2025/08/Bahjah.png`,
   ...Object.fromEntries(

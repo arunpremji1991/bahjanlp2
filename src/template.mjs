@@ -93,11 +93,21 @@ export function render(c, tracking, credits, base = '', opts = {}) {
 </section>`;
 
   // ── Optional story sections (content only; built from existing components) ──
+  // Story photos are AI-generated illustrations (not Bahjah families), so each one
+  // is labelled «صورة تعبيرية» on the image. Never use them as evidence of work.
+  const storyPhoto = (p) =>
+    p
+      ? `<figure class="story-photo reveal">
+      <img src="${a(p.src)}" srcset="${a(p.src)} 720w, ${a(p.srcLg)} 1280w" sizes="(min-width: 760px) 700px, calc(100vw - 32px)" width="${p.w}" height="${p.h}" alt="${esc(p.alt)}" loading="lazy" decoding="async"${src(p.src)}>
+      <figcaption class="illus-tag">${t.illustrative}</figcaption>
+    </figure>`
+      : '';
   const HM = c.homeMeaning;
   const homeMeaning = HM
     ? `<section class="section section-sand" id="home-meaning" aria-labelledby="home-title" data-section="home_meaning">
   <div class="wrap">
     ${sectionHead({ kicker: HM.kicker, title: HM.title, id: 'home-title' })}
+    ${storyPhoto(HM.photo)}
     <div class="prose prose-center reveal">
       ${HM.lines.map((x) => `<p${x.strong ? ' class="strong"' : ''}>${esc(x.text || x)}</p>`).join('\n      ')}
     </div>
@@ -113,6 +123,7 @@ export function render(c, tracking, credits, base = '', opts = {}) {
       <blockquote lang="ar" dir="rtl">${esc(M.verse)}</blockquote>
       <figcaption>${esc(M.ref)}</figcaption>
     </figure>
+    ${storyPhoto(M.photo)}
     <div class="prose prose-center reveal">
       ${M.lines.map((x) => `<p${x.strong ? ' class="strong"' : ''}>${esc(x.text || x)}</p>`).join('\n      ')}
     </div>
@@ -272,7 +283,10 @@ export function render(c, tracking, credits, base = '', opts = {}) {
 </section>`
     : '';
 
-  const finalBg = heroPair
+  const fp = c.final.photo;
+  const finalBg = fp
+    ? { src: fp.src, srcset: `${a(fp.src)} 720w, ${a(fp.srcLg)} 1280w`, w: fp.w, h: fp.h, illustrative: true }
+    : heroPair
     ? { src: cmp.pairs[cmp.pairs.length - 1].after, w: 640, h: 480 }
     : { src: 'assets/img/shared/photo-event.webp', w: 689, h: 331 };
 

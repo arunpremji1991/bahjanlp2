@@ -556,3 +556,10 @@ body.consent-open .consent { bottom: calc(84px + env(safe-area-inset-bottom)); }
   .proj.is-featured { grid-column: span 3; }
   .band-grid { grid-template-columns: 1.1fr 1fr; gap: 56px; }
 }
+
+/* Story photos (AI-generated illustrations, always labelled) */
+.story-photo { position: relative; max-width: 700px; margin: 0 auto 26px; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); background: var(--teal-100); }
+.story-photo img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.illus-tag { position: absolute; bottom: 10px; inset-inline-end: 10px; padding: 3px 10px; border-radius: 999px; background: rgba(11,59,51,.62); color: #fff; font-size: 11.5px; line-height: 1.6; letter-spacing: .01em; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1; }
+.final--photo .final-bg img { object-position: center 40%; }
+.final--photo .final-bg::after { background: linear-gradient(180deg, rgba(11,59,51,.58), rgba(11,59,51,.86)); }

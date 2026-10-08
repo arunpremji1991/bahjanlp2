@@ -152,6 +152,7 @@ export default {
       { text: 'إنه إصلاحٌ لمساحة يعيش فيها الإنسان بكرامة.', strong: true },
       'ومساهمتك قد تكون جزءًا من هذا الأمان.',
     ],
+    photo: { src: 'assets/img/story/home-window-720.webp', srcLg: 'assets/img/story/home-window-1280.webp', w: 720, h: 478, alt: 'صورة تعبيرية: طفل عُماني يذاكر قرب نافذة منزله بينما تجهّز والدته حقيبته المدرسية' }, // صورة تعبيرية (AI)
   },
 
   // ── STORY: Islamic values (Quran verse quoted exactly, with reference) ───
@@ -166,6 +167,7 @@ export default {
       'فحين تساهم في ترميم منزل أسرة يتيم، أنت لا تساهم في بناء جدران فقط… بل تساهم في صناعة أمانٍ وطمأنينة.',
     ],
     cta: 'اجعل لك أثرًا في هذا الخير',
+    photo: { src: 'assets/img/story/doorway-guardian-720.webp', srcLg: 'assets/img/story/doorway-guardian-1280.webp', w: 720, h: 478, alt: 'صورة تعبيرية: طفل عُماني يمسك بيد وليّه عند باب منزلهما وقت الغروب' }, // صورة تعبيرية (AI)
   },
 
   // ── 2. THE NEED ──────────────────────────────────────────────────────────
@@ -339,6 +341,7 @@ export default {
     ],
     text: 'مساهمتك، مهما كانت، تذهب إلى باب «بناء وترميم» منازل الأيتام في جمعية بهجة العمانية للأيتام.',
     note: 'اللهم تقبل منا ومنكم صالح الأعمال.',
+    photo: { src: 'assets/img/story/threshold-evening-720.webp', srcLg: 'assets/img/story/threshold-evening-1280.webp', w: 720, h: 478, alt: 'صورة تعبيرية: طفلة تقف عند باب بيتها الدافئ مساءً' }, // صورة تعبيرية (AI)
   },
 
   // ── WHY BAHJAH (shared facts + awards; page-specific heading and copy) ───
@@ -354,6 +357,7 @@ export default {
   // Footer «مصادر المحتوى والصور» + disclaimer (same pattern on every Bahjah landing page)
   faqTitle: 'أسئلة شائعة عن التبرع لترميم منازل الأيتام',
   sources: [
+    'صور «معنى البيت» و«رحمة وإحسان» والدعوة الختامية: صور تعبيرية مُنشأة بالذكاء الاصطناعي ولا تمثّل أسرًا حقيقية',
     'bahjah.org.om/wp/ — التعريف، تاريخ التأسيس، الجوائز، بيانات التواصل',
     'bahjah.org.om/wp/product/بناء-و-ترميم/ — باب التبرع «بناء وترميم» وقيمة الوحدة',
     'bahjah.org.om/wp/الاسئلة-الشائعة/ — طرق الدفع (بوابة بنك مسقط SmartPay)',
