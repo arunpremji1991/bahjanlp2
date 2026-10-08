@@ -19,6 +19,7 @@ const captions = {
 
 export default {
   ...ar,
+  needImage: { ...ar.needImage, alt: 'Illustrative image: a mother and her son watch the wall of their home being repaired' },
   lang: 'en',
   org: orgEn,
 
@@ -261,7 +262,7 @@ export default {
 
   faqTitle: "Questions about giving to renovate orphans' homes",
   sources: [
-    'Photos in "What a home means", "Mercy and kindness" and the closing section: AI-generated illustrative images, not real families',
+    'Photos in "Why renovation?", "What a home means", "Mercy and kindness" and the closing section: AI-generated illustrative images, not real families',
     'bahjah.org.om/wp/ — about, founding date, awards, contact details',
     'bahjah.org.om/wp/product/بناء-و-ترميم/ — the "Building & Renovation" donation page and unit value',
     'bahjah.org.om/wp/الاسئلة-الشائعة/ — payment methods (Bank Muscat SmartPay)',

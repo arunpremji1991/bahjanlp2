@@ -129,7 +129,8 @@ svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-wi
 /* ---------- Need + sponsor card ---------- */
 .need-grid { display: grid; gap: 20px; }
 .need-story { background: var(--teal-50); border-radius: var(--r-lg); overflow: hidden; display: grid; }
-.need-story img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.need-media { position: relative; margin: 0; }
+.need-story img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
 .need-body { padding: 22px 22px 26px; }
 .need-body h2 { font-size: clamp(22px, 5.4vw, 30px); }
 .need-body p { color: var(--ink-2); }
@@ -284,10 +285,8 @@ svg { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-wi
   .hero-copy { margin: 0; padding: 0; }
   .hero h1 { font-size: min(42px, 3.2vw); text-wrap: wrap; }
   .hero h1 .accent { white-space: nowrap; }
-  .need-grid { grid-template-columns: 1.5fr 1fr; gap: 28px; align-items: stretch; }
-  .need-story { grid-template-columns: .8fr 1.2fr; }
-  .need-story img { height: 100%; aspect-ratio: auto; }
-  .need-body { padding: 32px 30px; align-self: center; }
+  .need-grid { grid-template-columns: 1.5fr 1fr; gap: 28px; align-items: start; }
+  .need-body { padding: 30px 34px 34px; }
   .sponsor-card { padding: 30px 28px; }
   .steps { grid-template-columns: repeat(3, 1fr); gap: 36px; }
   .step { flex-direction: column; align-items: center; text-align: center; }

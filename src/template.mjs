@@ -165,7 +165,10 @@ export function render(c, tracking, credits, base = '', opts = {}) {
   const need = `<section class="section section-sand" id="give" aria-labelledby="need-title" data-section="need">
   <div class="wrap need-grid">
     <article class="need-story reveal">
-      ${needImg ? `<img src="${a(needImg.src)}" alt="${esc(needImg.alt || '')}" width="${needImg.width}" height="${needImg.height}" loading="lazy"${src(needImg.src)}>` : ''}
+      ${needImg ? `<figure class="need-media">
+        <img src="${a(needImg.src)}" ${needImg.srcLg ? `srcset="${a(needImg.src)} 720w, ${a(needImg.srcLg)} 1280w" sizes="(min-width: 960px) 760px, calc(100vw - 32px)" ` : ''}alt="${esc(needImg.alt || '')}" width="${needImg.width}" height="${needImg.height}" loading="lazy" decoding="async"${src(needImg.src)}>
+        ${needImg.illustrative ? `<figcaption class="illus-tag">${t.illustrative}</figcaption>` : ''}
+      </figure>` : ''}
       <div class="need-body">
         <span class="kicker">${t.kNeed}</span>
         <h2 id="need-title">${esc(N.title)}</h2>

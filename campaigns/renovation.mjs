@@ -171,6 +171,8 @@ export default {
   },
 
   // ── 2. THE NEED ──────────────────────────────────────────────────────────
+  // صورة تعبيرية (AI) – the official CV photo here was only ~210px wide; it stays in the before/after gallery.
+  needImage: { src: 'assets/img/story/renovation-watch-720.webp', srcLg: 'assets/img/story/renovation-watch-1280.webp', width: 720, height: 407, illustrative: true, alt: 'صورة تعبيرية: أمّ وابنها يشاهدان ترميم جدار منزلهما' },
   need: {
     title: 'لأن الأمان يبدأ من البيت',
     paragraphs: [
@@ -357,7 +359,7 @@ export default {
   // Footer «مصادر المحتوى والصور» + disclaimer (same pattern on every Bahjah landing page)
   faqTitle: 'أسئلة شائعة عن التبرع لترميم منازل الأيتام',
   sources: [
-    'صور «معنى البيت» و«رحمة وإحسان» والدعوة الختامية: صور تعبيرية مُنشأة بالذكاء الاصطناعي ولا تمثّل أسرًا حقيقية',
+    'صور «لماذا الترميم؟» و«معنى البيت» و«رحمة وإحسان» والدعوة الختامية: صور تعبيرية مُنشأة بالذكاء الاصطناعي ولا تمثّل أسرًا حقيقية',
     'bahjah.org.om/wp/ — التعريف، تاريخ التأسيس، الجوائز، بيانات التواصل',
     'bahjah.org.om/wp/product/بناء-و-ترميم/ — باب التبرع «بناء وترميم» وقيمة الوحدة',
     'bahjah.org.om/wp/الاسئلة-الشائعة/ — طرق الدفع (بوابة بنك مسقط SmartPay)',

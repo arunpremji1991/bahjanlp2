@@ -9,7 +9,7 @@ export const credits = {
   // Exception: AI-generated illustrative photos (Higgsfield · GPT Image 2.5, Oct 2026).
   // Not Bahjah families; always shown with the «صورة تعبيرية» label, never as evidence.
   ...Object.fromEntries(
-    ['home-window', 'doorway-guardian', 'threshold-evening'].flatMap((n) =>
+    ['home-window', 'doorway-guardian', 'threshold-evening', 'renovation-watch'].flatMap((n) =>
       [720, 1280].map((w) => [`assets/img/story/${n}-${w}.webp`, 'AI-generated illustrative image (Higgsfield, GPT Image 2.5) – صورة تعبيرية'])
     )
   ),
