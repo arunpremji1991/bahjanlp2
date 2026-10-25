@@ -333,7 +333,7 @@ ${main}
       </ul>
     </details>
     <p class="copy">${esc(c.disclaimer || '')}</p>
-    <p class="dev-credit">${t.devBy} <span lang="en" dir="ltr">Glomark</span></p>
+    <p class="dev-credit">${t.devBy} <a href="https://glomark.om" target="_blank" rel="noopener" lang="en" dir="ltr" data-outbound="glomark">Glomark</a></p>
   </div>
 </footer>
 

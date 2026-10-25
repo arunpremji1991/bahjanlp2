@@ -565,5 +565,6 @@ body.consent-open .consent { bottom: calc(84px + env(safe-area-inset-bottom)); }
 
 /* Agency credit (footer, last line) */
 .dev-credit { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); font-size: 12px; opacity: .6; text-align: center; }
-.dev-credit span { font-weight: 600; letter-spacing: .02em; }
+.dev-credit a { color: inherit; font-weight: 600; letter-spacing: .02em; text-decoration: underline; text-underline-offset: 3px; }
+.dev-credit a:hover { opacity: .85; }
 @media (min-width: 960px) { .footer-grid .dev-credit { grid-column: 1 / -1; } }
