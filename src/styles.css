@@ -562,3 +562,8 @@ body.consent-open .consent { bottom: calc(84px + env(safe-area-inset-bottom)); }
 .illus-tag { position: absolute; bottom: 10px; inset-inline-end: 10px; padding: 3px 10px; border-radius: 999px; background: rgba(11,59,51,.62); color: #fff; font-size: 11.5px; line-height: 1.6; letter-spacing: .01em; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 1; }
 .final--photo .final-bg img { object-position: center 40%; }
 .final--photo .final-bg::after { background: linear-gradient(180deg, rgba(11,59,51,.58), rgba(11,59,51,.86)); }
+
+/* Agency credit (footer, last line) */
+.dev-credit { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.12); font-size: 12px; opacity: .6; text-align: center; }
+.dev-credit span { font-weight: 600; letter-spacing: .02em; }
+@media (min-width: 960px) { .footer-grid .dev-credit { grid-column: 1 / -1; } }

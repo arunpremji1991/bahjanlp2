@@ -51,6 +51,7 @@ export const STR = {
     unitOne: 'ريال عماني واحد',
     unitHelp: '«1,000 ر.ع.» في صفحة الدفع = ريال واحد · كيف أكتب المبلغ؟',
     illustrative: 'صورة تعبيرية',
+    devBy: 'تصميم وتطوير',
     unitTxt: 'تعرض صفحة الدفع الرسمية الريال بثلاث خانات عشرية (1,000 بيسة). ',
     unitTxt1: 'اكتب مبلغ مساهمتك بالريال في خانة <strong>«الكمية»</strong>.',
     unitTxtN: (v) => `كل وحدة تساوي ${v} ر.ع.، فحدّد عدد الوحدات في خانة <strong>«الكمية»</strong>.`,
@@ -88,6 +89,7 @@ export const STR = {
     unitOne: 'One Omani rial',
     unitHelp: '«1,000 ر.ع.» on the payment page = 1 OMR · How do I enter my amount?',
     illustrative: 'Illustrative image',
+    devBy: 'Designed & developed by',
     unitTxt: 'The official payment page (in Arabic) shows rials with three decimal places (1,000 baisa). ',
     unitTxt1: 'Type your gift in rials in the <strong>“الكمية” (Quantity)</strong> field.',
     unitTxtN: (v) => `Each unit is ${v} OMR, so enter the number of units in the <strong>“الكمية” (Quantity)</strong> field.`,
@@ -331,6 +333,7 @@ ${main}
       </ul>
     </details>
     <p class="copy">${esc(c.disclaimer || '')}</p>
+    <p class="dev-credit">${t.devBy} <span lang="en" dir="ltr">Glomark</span></p>
   </div>
 </footer>
 
